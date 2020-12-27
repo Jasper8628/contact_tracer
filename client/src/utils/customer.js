@@ -1,10 +1,11 @@
+import fs from 'fs';
 const customers = [];
 const shops = [];
 const openingHours = [8, 9, 10, 11, 12, 13, 14, 15, 16, 17];
 const durations = [30, 60, 90, 120, 150, 180, 210, 240];
 const gap = [];
-const numCustomers = 100000;
-const numShops = 3750;
+const numCustomers = 3000;
+const numShops = 200;
 const sample = [
   '0500000035',
   '0500000100',
@@ -33,6 +34,8 @@ for (let i = 0; i < numShops; i++) {
     'phoneNumber': num
   })
 }
+
+
 const countDay = (iter) => {
   const ms = new Date().getTime();
   const numMS = (ms / 1000 / 3600 / 24 - (14 - iter)) * 24 * 3600 * 1000
@@ -88,9 +91,19 @@ customers.forEach(customer => {
     generateVisit(i, customer)
   }
 })
+// fs.writeFile('shops.js', JSON.stringify(shops), function (err) {
+//   if (err) throw err;
+//   console.log('Replaced!');
+// });
+// fs.writeFile('customers.js', JSON.stringify(customers), function (err) {
+//   if (err) throw err;
+//   console.log('Replaced!');
+// });
 
 const listOfShops = []
 const set = new Set();
+const firstSet = new Set();
+const secSet = new Set();
 
 const tag = (phoneNumber, numdays, isSecRound) => {
   const customer = customers.find(customer => customer.phoneNumber === phoneNumber)
@@ -125,15 +138,34 @@ const secTag = (isSecRound) => {
     // console.log(numDays);
     if (newTo === newFrom) {
       shop[visitDate][newFrom].forEach(customer => {
+        if (!isSecRound) {
+          firstSet.add(customer.phoneNumber)
+          // update customer.status to red here
+        } else {
+          const firstSetArray = Array.from(firstSet);
+          if (firstSetArray.indexOf(customer.phoneNumber) === -1) {
+            secSet.add(customer.phoneNumber)
+          }
+          // if customer.status !=='red'
+          // update customer.status to yellow here
+        }
         newSet.add(customer.phoneNumber);
         set.add(customer.phoneNumber)
       })
     } else {
-      shop[visitDate][newFrom].forEach(customer => {
-        newSet.add(customer.phoneNumber);
-        set.add(customer.phoneNumber)
-      })
-      shop[visitDate][newTo].forEach(customer => {
+      const tempArray = shop[visitDate][newFrom].concat(shop[visitDate][newTo])
+      tempArray.forEach(customer => {
+        if (!isSecRound) {
+          firstSet.add(customer.phoneNumber)
+          // update customer.status to red here
+        } else {
+          const firstSetArray = Array.from(firstSet);
+          if (firstSetArray.indexOf(customer.phoneNumber) === -1) {
+            secSet.add(customer.phoneNumber)
+          }
+          // if customer.status !=='red'
+          // update customer.status to yellow here
+        }
         newSet.add(customer.phoneNumber);
         set.add(customer.phoneNumber)
       })
@@ -146,10 +178,15 @@ const secTag = (isSecRound) => {
       })
     }
   })
-  console.log('count: ', count, "set size: ", set.size);
+  // console.log('setSize: ', set.size, 'firstSet size: ', firstSet.size, "secSet size: ", secSet.size);
+  // console.log(count)
 }
 // console.log(customers[12]['2020 12 22'])
-// sample.forEach(item => { tag(item, 14, true) })
+// sample.forEach(item => { tag(item, 14, false) })
+// for (let i = 0; i < 2; i++) {
+//   const num = i + 500000000
+//   const newNum = "0" + num
+//   tag(newNum, 14, false)
+// }
 tag('0500000035', 14, false)
 // console.log(shops[5]['2020 12 22'][10])
-// export { customers, shops }

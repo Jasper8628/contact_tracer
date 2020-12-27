@@ -1,0 +1,21 @@
+.square{
+  color: rgba(255, 255, 255, 0.541);
+  width: 100px;
+  height:50px;
+  background: rgb(65, 64, 64);
+  border-radius: 10px;
+  display: inline-flex;
+  margin: 10px;
+}
+.squares{
+  position: absolute;
+  top:5%;
+  left:15%;
+  width: 70vw;
+  display: flexbox;
+  transform: rotateZ(-10deg) skew(45deg) ;
+}
+p{
+  font-size: 12px;
+  display: block;
+}
