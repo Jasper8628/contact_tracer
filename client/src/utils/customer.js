@@ -3,18 +3,34 @@ const shops = [];
 const openingHours = [8, 9, 10, 11, 12, 13, 14, 15, 16, 17];
 const durations = [30, 60, 90, 120, 150, 180, 210, 240];
 const gap = [];
-for (let i = 0; i < 50; i++) {
+const numCustomers = 100000;
+const numShops = 3750;
+const sample = [
+  '0500000035',
+  '0500000100',
+  '0500000495',
+  '0500000335',
+  '0500000766',
+  '0500000715',
+  '0500000656',
+  '0500000255',
+  '0500000174',
+  '0500000332']
+for (let i = 0; i < 12; i++) {
+  gap.push(5 * i)
+}
+for (let i = 0; i < numCustomers; i++) {
   const num = i + 500000000
   customers.push({
-    'phone number': '0' + num,
+    'phoneNumber': '0' + num,
     'status': 'negative'
   })
 }
-for (let i = 0; i < 10; i++) {
+for (let i = 0; i < numShops; i++) {
   const num = i + 900000000
   shops.push({
-    businessName: 'random shop' + i,
-    'phone number': num
+    shopName: 'random shop' + i,
+    'phoneNumber': num
   })
 }
 const countDay = (iter) => {
@@ -35,11 +51,8 @@ for (let j = 0; j < 14; j++) {
     }
   })
 }
-for (let i = 0; i < 12; i++) {
-  gap.push(5 * i)
-}
 const generateVisit = (iter, customer) => {
-  const ranNum = Math.ceil(Math.random() * 5);
+  const ranNum = Math.floor(Math.random() * 3);
   const newDate = countDay(iter);
   let hour = genRandom(openingHours)
   customer[newDate] = [];
@@ -49,15 +62,15 @@ const generateVisit = (iter, customer) => {
     const duration = genRandom(durations) / 60
     const gapTime = genRandom(gap) / 60;
     if (hour <= 17) {
-      customer[newDate] = {
-        [shop.businessName]: {
-          from: hour,
-          to: (hour * 60 + duration) / 60
-        }
-      }
+      customer[newDate].push({
+        shopName: shop.shopName,
+        from: hour,
+        to: (hour + duration) > 17 ? 17 : hour + duration
+      })
+
       const newTime = Math.floor(hour).toString();
       shop[newDate][newTime].push({
-        'phone number': customer['phone number'],
+        'phoneNumber': customer.phoneNumber,
         'status': customer.status,
         'duration': duration * 60 + 'minutes'
       })
@@ -75,5 +88,68 @@ customers.forEach(customer => {
     generateVisit(i, customer)
   }
 })
-// console.log(customers[10]['2020 12 22'])
-console.log(shops[5]['2020 12 22'][10])
+
+const listOfShops = []
+const set = new Set();
+
+const tag = (phoneNumber, numdays, isSecRound) => {
+  const customer = customers.find(customer => customer.phoneNumber === phoneNumber)
+  if (customer !== undefined) {
+    for (let i = 14 - numdays; i < 14; i++) {
+      const date = countDay(i);
+      customer[date].forEach(shop => {
+        listOfShops.push({
+          shopName: shop.shopName,
+          visitDate: date,
+          from: shop.from,
+          to: shop.to
+        })
+      })
+    }
+    secTag(isSecRound)
+  } else {
+    console.log('customer not found, try another number')
+  }
+}
+let count = 0;
+const secTag = (isSecRound) => {
+  listOfShops.forEach(item => {
+    const newSet = new Set();
+    const shop = shops.find(shop => shop.shopName === item.shopName);
+    const { visitDate, from, to } = item;
+    const newTo = Math.floor(to)
+    const newFrom = Math.floor(from)
+    const thenDays = new Date(visitDate) / 1000 / 3600 / 24;
+    const nowDays = new Date() / 1000 / 3600 / 24;
+    const numDays = Math.floor(nowDays - thenDays);
+    // console.log(numDays);
+    if (newTo === newFrom) {
+      shop[visitDate][newFrom].forEach(customer => {
+        newSet.add(customer.phoneNumber);
+        set.add(customer.phoneNumber)
+      })
+    } else {
+      shop[visitDate][newFrom].forEach(customer => {
+        newSet.add(customer.phoneNumber);
+        set.add(customer.phoneNumber)
+      })
+      shop[visitDate][newTo].forEach(customer => {
+        newSet.add(customer.phoneNumber);
+        set.add(customer.phoneNumber)
+      })
+    }
+    count++;
+    const customersToTag = Array.from(newSet)
+    if (!isSecRound) {
+      customersToTag.forEach(number => {
+        tag(number, numDays, true)
+      })
+    }
+  })
+  console.log('count: ', count, "set size: ", set.size);
+}
+// console.log(customers[12]['2020 12 22'])
+// sample.forEach(item => { tag(item, 14, true) })
+tag('0500000035', 14, false)
+// console.log(shops[5]['2020 12 22'][10])
+// export { customers, shops }
