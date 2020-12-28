@@ -4,12 +4,14 @@ import React, { useEffect, useState } from 'react';
 import Shop from './components/shop';
 import Menu from './components/menu';
 import axios from 'axios';
+const red = 'rgba(255, 0, 0, 0.8)'
+const yellow = 'rgba(255, 255, 0, 0.6)'
 function App() {
   const [positions, setPosition] = useState([]);
   const [colors, setColor] = useState({});
   useEffect(() => {
     const temp = []
-    for (let i = 0; i < 2000; i++) {
+    for (let i = 0; i < 1500; i++) {
       const num = '0' + (500000000 + i);
       const x = Math.ceil(Math.random() * 1200 + 200)
       const y = Math.ceil(Math.random() * 800 + 200)
@@ -23,7 +25,10 @@ function App() {
   }
   const handleHover = (e) => {
     const name = e.target.getAttribute('name');
-    console.log(name)
+    setColor({
+      ...colors,
+      [name]: 'white'
+    })
     const data = {
       phoneNumber: name,
       numdays: 14,
@@ -35,13 +40,17 @@ function App() {
         console.log(res.data)
         const arr = res.data.closeContact
         const arr2 = res.data.secondContact
-        const color = {}
+        const color = colors
         arr.forEach(element => {
-          color[element] = 'red'
+          if (element === name) {
+            color[element] = 'white'
+          } else if (color[element] !== 'white') {
+            color[element] = red
+          }
         });
         arr2.forEach(element => {
-          if (color[element] !== 'red') {
-            color[element] = 'yellow'
+          if (color[element] !== red && color[element] !== 'white') {
+            color[element] = yellow
           }
         });
         setColor(color)
@@ -54,7 +63,10 @@ function App() {
       {/* <svg>  */}
       {positions.map((position, index) => (
         <Shop
-          color={colors[position.num] || 'green'}
+          className={colors[position.num] === 'white' ?
+            'shop fas fa-skull' : colors[position.num] === red ? 'shop fas fa-virus red' :
+              colors[position.num] === yellow ? 'shop fas fa-virus yellow' : 'normal'}
+          color={colors[position.num] || 'white'}
           key={index}
           x={position.x}
           y={position.y}

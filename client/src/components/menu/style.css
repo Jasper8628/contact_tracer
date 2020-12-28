@@ -1,10 +1,10 @@
 #reset{
   margin: 20px;
-  border: green solid 2px;
+  border: rgba(17, 186, 238, 0.915) solid 2px;
   border-radius: 50px;
   width: 6em;
   height: 3em;
   background: transparent;
-  color: green;
+  color: rgba(17, 186, 238, 0.915);
   outline: none;
 }
