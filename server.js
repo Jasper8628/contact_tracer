@@ -1,7 +1,7 @@
 const express = require("express");
 const app = express();
 const PORT = process.env.PORT || 3001;
-const [tag, secTag, reset] = require('./utils/customer');
+const [tag, secTag, reset, restart] = require('./utils/customer');
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 // Serve up static assets (usually on heroku)
@@ -15,10 +15,17 @@ if (process.env.NODE_ENV === "production") {
 const set = new Set();
 const firstSet = new Set();
 const secSet = new Set();
+app.get('/api', (req, res) => {
+  restart()
+  console.log('server restarted')
+  res.json({
+    message: 'server reset'
+  })
+})
 app.post('/api', (req, res) => {
   reset();
-  const { phoneNumber, numdays, isSecRound } = req.body
-  tag(phoneNumber, numdays, isSecRound)
+  const { phoneNumber, numdays } = req.body
+  tag(phoneNumber, numdays)
     .then(data => {
       const newData = JSON.parse(data)
       console.log('patient zero visited:', newData.length, 'shops');
@@ -30,8 +37,8 @@ app.post('/api', (req, res) => {
             .then(data => {
               const final = JSON.parse(data);
               console.log('secondary contacts:', final[0].length)
-              console.log('total shops in question:', parsed[0].length)
               console.log('total sicklies:', final[1].length)
+              console.log('total shop hours in question:', parsed[0].length)
               res.json({
                 message: 'second response',
                 closeContact: parsed[1],

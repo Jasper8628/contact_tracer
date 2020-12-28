@@ -1,0 +1,10 @@
+#reset{
+  margin: 20px;
+  border: green solid 2px;
+  border-radius: 50px;
+  width: 6em;
+  height: 3em;
+  background: transparent;
+  color: green;
+  outline: none;
+}
