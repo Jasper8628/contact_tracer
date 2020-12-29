@@ -44,6 +44,7 @@ app.post('/api', (req, res) => {
                 closeContact: parsed[1],
                 secondContact: final[0],
                 primaryShops: newData,
+                primaryContacts: parsed[2],
                 secondaryShops: parsed[0]
               })
             })

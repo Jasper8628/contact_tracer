@@ -1,15 +1,7 @@
 body{
   background: black;
 }
-.container{
-  padding:5%;
-  position: absolute;
-  left:5%;
-  top:5%;
-  width: 30vw;
-  height: 50vh;
-  background: gray;
-}
+
 svg{
   padding:5%;
   position: fixed;

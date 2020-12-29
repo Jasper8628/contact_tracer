@@ -40,6 +40,7 @@ const generateVisit = (iter, customer, visits) => {
     if (hour <= 17) {
       customer[newDate].push({
         shopName: shop.shopName,
+        phoneNumber: shop.phoneNumber,
         from: hour,
         to: (hour + duration) > 17 ? 17 : hour + duration
       })
@@ -54,7 +55,7 @@ const generateVisit = (iter, customer, visits) => {
   }
 }
 
-const reset = () => { listOfShops = [] }
+const reset = () => { listOfShops = []; primeContact = [] }
 const restart = () => {
   customers = {};
   shops = [];
@@ -63,7 +64,7 @@ const restart = () => {
   firstSet = new Set();
   secSet = new Set();
   for (let i = 0; i < numShops; i++) {
-    const num = i + 900000000
+    const num = '0' + (i + 900000000)
     shops.push({
       shopName: 'random shop' + i,
       'phoneNumber': num
@@ -99,6 +100,8 @@ const tag = async (phoneNumber, numdays) => {
       customer[date].forEach(shop => {
         listOfShops.push({
           shopName: shop.shopName,
+          phoneNumber: shop.phoneNumber,
+          customer: phoneNumber,
           visitDate: date,
           from: shop.from,
           to: shop.to
@@ -111,12 +114,12 @@ const tag = async (phoneNumber, numdays) => {
   }
   return JSON.stringify(listOfShops)
 }
-
+let primeContact = []
 const secTag = async (arr, isSecRound) => {
   arr.forEach(item => {
     const newSet = new Set();
     const shop = shops.find(shop => shop.shopName === item.shopName);
-    const { visitDate, from, to } = item;
+    const { visitDate, from, to, phoneNumber } = item;
     const newTo = Math.floor(to)
     const newFrom = Math.floor(from)
     const thenDays = new Date(visitDate) / 1000 / 3600 / 24;
@@ -155,6 +158,7 @@ const secTag = async (arr, isSecRound) => {
       })
     }
     const customersToTag = Array.from(newSet)
+    primeContact.push({ phoneNumber, customersToTag })
     if (!isSecRound) {
       customersToTag.forEach(number => {
         tag(number, numDays)
@@ -163,7 +167,7 @@ const secTag = async (arr, isSecRound) => {
   })
   if (!isSecRound) {
     const firstArr = Array.from(firstSet)
-    return JSON.stringify([listOfShops, firstArr])
+    return JSON.stringify([listOfShops, firstArr, primeContact])
   } else {
     const result = Array.from(secSet);
     const total = Array.from(set);
