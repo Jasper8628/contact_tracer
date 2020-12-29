@@ -50,12 +50,12 @@ function Index() {
   }
 
   const reset = () => {
-    // const arr = document.getElementsByClassName('normal');
-    // for (let i = 0; i < arr.length; i++) {
-    //   arr[i].classList.remove('red', 'yellow', 'primary');
-    //   arr[i].style.color = 'rgba(17, 186, 238, 0.315)';
-    //   arr[i].style.border = 'rgba(17, 186, 238, 0.315) solid 2px';
-    // }
+    const arr = document.getElementsByClassName('node');
+    for (let i = 0; i < arr.length; i++) {
+      arr[i].classList.remove('red', 'yellow', 'primary');
+      // arr[i].style.color = 'rgba(17, 186, 238, 0.315)';
+      // arr[i].style.border = 'rgba(17, 186, 238, 0.315) solid 2px';
+    }
     setZero([])
     setClose([])
     setSecShop([])
@@ -188,19 +188,24 @@ function Index() {
   }
   const firstStop = (e) => {
     console.log(e)
-    const colObj = shopColor;
+    // const colObj = shopColor;
     const name = e.target.getAttribute('name')
-    colObj[name].color = shopRed
-    setShopColor(colObj);
+    // colObj[name].color = shopRed
     const lines = secondShops.concat(shopColor[name].lines);
     setSecShop(lines);
+    const node = document.getElementById(name);
+    node.classList.add('red', 'node')
+    // node.style.color = 'rgba(255, 0, 0, 0.644)'
+    // node.style.border = 'rgba(255, 0, 0, 0.644) solid 2px';
+    // setShopColor(colObj);
   }
   const secondStop = (e) => {
     const name = e.target.getAttribute('name')
     const colObj = colors;
     colObj[name] = red
-    setColor(colors => ({ ...colors, ...colObj }))
-    // const node = document.getElementById(name);
+    // setColor(colors => ({ ...colors, ...colObj }))
+    const node = document.getElementById(name);
+    node.classList.add('red', 'node')
     // node.style.color = 'rgba(255, 0, 0, 0.644)'
     // node.style.border = 'rgba(255, 0, 0, 0.644) solid 2px';
   }
