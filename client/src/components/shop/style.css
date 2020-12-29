@@ -46,7 +46,7 @@ svg{
 line{
   stroke-dasharray: 1500;
   stroke-dashoffset: 1500;
-  animation: grow 3s linear forwards;
+  animation: grow 2s linear forwards;
 }
 @keyframes grow {
   to{
