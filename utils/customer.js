@@ -1,17 +1,17 @@
-
 let customers = {};
 let shops = [];
 let set = new Set();
 let firstSet = new Set();
 let secSet = new Set();
 let listOfShops = []
+let primeContact = []
 const openingHours = [8, 9, 10, 11, 12, 13, 14, 15, 16, 17];
 const durations = [30, 60, 90, 120, 150];
 const gap = [];
 const numCustomers = 2000;
 const numShops = 100;
-const visits = 6
-const offset = 3;
+const visits = 7
+const offset = Math.ceil(visits / 2);
 for (let i = 0; i < 12; i++) {
   gap.push(5 * i)
 }
@@ -56,14 +56,16 @@ const generateVisit = (iter, customer, visits, offset) => {
   }
 }
 
-const reset = () => { listOfShops = []; primeContact = [] }
-const restart = () => {
-  customers = {};
-  shops = [];
+const reset = () => {
   listOfShops = [];
   set = new Set();
   firstSet = new Set();
   secSet = new Set();
+}
+const restart = () => {
+  reset()
+  customers = {};
+  shops = [];
   for (let i = 0; i < numShops; i++) {
     const num = '0' + (i + 900000000)
     shops.push({
@@ -109,13 +111,12 @@ const tag = async (phoneNumber, numdays) => {
         })
       })
     }
-    // secTag(isSecRound)
   } else {
     console.log('customer not found, try another number')
   }
   return JSON.stringify(listOfShops)
 }
-let primeContact = []
+
 const secTag = async (arr, isSecRound) => {
   primeContact = []
   arr.forEach(item => {
@@ -127,38 +128,24 @@ const secTag = async (arr, isSecRound) => {
     const thenDays = new Date(visitDate) / 1000 / 3600 / 24;
     const nowDays = new Date() / 1000 / 3600 / 24;
     const numDays = Math.floor(nowDays - thenDays);
+    let tempArr = []
     if (newTo === newFrom) {
-      shop[visitDate][newFrom].forEach(customer => {
-        const phoneNum = customer.phoneNumber;
-        if (!isSecRound) {
-          customers[phoneNum].status = 'red'
-          firstSet.add(phoneNum)
-        } else {
-          if (customers[phoneNum].status !== 'red') {
-            customers[phoneNum].status = 'yellow'
-            secSet.add(phoneNum)
-          }
+      tempArr = shop[visitDate][newFrom]
+    } else { tempArr = shop[visitDate][newFrom].concat(shop[visitDate][newTo]) }
+    tempArr.forEach(customer => {
+      const phoneNum = customer.phoneNumber;
+      if (!isSecRound) {
+        customers[phoneNum].status = 'red'
+        firstSet.add(phoneNum)
+      } else {
+        if (customers[phoneNum].status !== 'red') {
+          customers[phoneNum].status = 'yellow'
+          secSet.add(phoneNum)
         }
-        newSet.add(customer.phoneNumber);
-        set.add(customer.phoneNumber)
-      })
-    } else {
-      const tempArray = shop[visitDate][newFrom].concat(shop[visitDate][newTo])
-      tempArray.forEach(customer => {
-        const phoneNum = customer.phoneNumber;
-        if (!isSecRound) {
-          customers[phoneNum].status = 'red';
-          firstSet.add(phoneNum)
-        } else {
-          if (customers[phoneNum].status !== 'red') {
-            customers[phoneNum].status = 'yellow'
-            secSet.add(phoneNum)
-          }
-        }
-        newSet.add(customer.phoneNumber);
-        set.add(customer.phoneNumber)
-      })
-    }
+      }
+      newSet.add(customer.phoneNumber);
+      set.add(customer.phoneNumber)
+    })
     const customersToTag = Array.from(newSet)
     primeContact.push({ phoneNumber, customersToTag })
     if (!isSecRound) {

@@ -6,6 +6,7 @@ import Menu from './components/menu';
 function App() {
   return (
     <div >
+      <h1>Contact Tracer</h1>
       <Shop />
     </div>
   );

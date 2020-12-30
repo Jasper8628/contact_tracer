@@ -37,7 +37,7 @@ app.post('/api', (req, res) => {
             .then(data => {
               const final = JSON.parse(data);
               console.log('secondary contacts:', final[0].length)
-              console.log('total sicklies:', final[1].length)
+              console.log('chain of transmission total of', final[1].length, 'impacted')
               console.log('total shop hours in question:', parsed[0].length)
               res.json({
                 message: 'query successful',
@@ -48,7 +48,6 @@ app.post('/api', (req, res) => {
               })
             })
         })
-
     })
 })
 app.listen(PORT, function () {

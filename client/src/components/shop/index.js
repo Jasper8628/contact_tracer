@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
-import './style.css'
 import axios from 'axios';
+import './style.css'
 const red = 'red normal'
 const yellow = 'yellow normal';
 const primary = 'primary normal'
@@ -22,9 +22,11 @@ function Index() {
     display: 'block',
     text: 'Clear Lines'
   })
+
   useEffect(() => {
     init()
   }, [])
+
   const init = () => {
     const people = []
     const shopArr = []
@@ -75,9 +77,7 @@ function Index() {
     })
     const data = {
       phoneNumber: name,
-      numdays: 14,
-      isSecRound: true,
-      message: 'hello'
+      numdays: 14
     }
     axios.post('/api', data)
       .then(res => {
@@ -130,18 +130,20 @@ function Index() {
             shopCol[element.phoneNumber] = shopYellow
           }
         });
-        arr.forEach(element => {
-          if (element === name) {
-            color[element] = primary
-          } else if (color[element] !== primary) {
-            color[element] = red
-          }
-        });
-        arr2.forEach(element => {
-          if (color[element] !== red && color[element] !== primary) {
-            color[element] = yellow
-          }
-        });
+        if (arr.length) {
+          arr.forEach(element => {
+            if (element === name) {
+              color[element] = primary
+            } else if (color[element] !== primary) {
+              color[element] = red
+            }
+          });
+          arr2.forEach(element => {
+            if (color[element] !== red && color[element] !== primary) {
+              color[element] = yellow
+            }
+          });
+        } else { color[name] = primary }
         setShopColor(shopCol)
         setColor(color)
       })
