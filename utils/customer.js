@@ -172,7 +172,7 @@ const secTag = async (arr, isSecRound) => {
   } else {
     const result = Array.from(secSet);
     const total = Array.from(set);
-    return JSON.stringify([result, total])
+    return JSON.stringify([result, total, primeContact])
   }
 }
 

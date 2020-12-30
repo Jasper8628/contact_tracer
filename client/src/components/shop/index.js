@@ -25,24 +25,26 @@ function Index() {
   const init = () => {
     const people = []
     const shopArr = []
-    const colorArr = {}
+    const tempShopColor = {}
+    const tempPeopleColor = {}
     for (let i = 0; i < 2000; i++) {
       const num = '0' + (500000000 + i);
       const x = Math.ceil(Math.random() * 1450 + 30)
       const y = Math.ceil(Math.random() * 800 + 30)
       people.push({ x, y, num })
+      tempPeopleColor[num] = { color: '', lines: [] }
     }
     for (let i = 0; i < 100; i++) {
       const num = '0' + (900000000 + i);
       const x = Math.ceil(Math.random() * 1450 + 20)
       const y = Math.ceil(Math.random() * 800 + 20)
       shopArr.push({ x, y, num, icon: genRandom(icons) })
-      colorArr[num] = { color: '', lines: [] }
+      tempShopColor[num] = { color: '', lines: [], lines2: [] }
     }
-    setShopColor(colorArr)
+    setColor(tempPeopleColor)
+    setShopColor(tempShopColor)
     setShop(shopArr)
     setPosition(people)
-
   }
   const genRandom = (array) => {
     const ranNum = Math.floor(Math.random() * array.length);
@@ -53,22 +55,22 @@ function Index() {
     const arr = document.getElementsByClassName('node');
     for (let i = 0; i < arr.length; i++) {
       arr[i].classList.remove('red', 'yellow', 'primary');
-      // arr[i].style.color = 'rgba(17, 186, 238, 0.315)';
-      // arr[i].style.border = 'rgba(17, 186, 238, 0.315) solid 2px';
     }
     setZero([])
     setClose([])
     setSecShop([])
     setSecCont([])
     const tempColArr = {}
+    const tempPplArr = {}
     shops.forEach(shop => {
-      tempColArr[shop.num] = { lines: [], color: '' }
+      tempColArr[shop.num] = { lines: [], color: '', lines2: [] }
+    })
+    positions.forEach(position => {
+      tempPplArr[position.num] = { color: '', lines: [] }
     })
     setShopColor(tempColArr)
-    setColor({});
+    setColor(tempPplArr);
     setLineDisplay({
-      display1: 'none',
-      display2: 'none',
       display: 'block',
       text: 'Show Line'
     })
@@ -77,10 +79,8 @@ function Index() {
 
   const handleClick = (e) => {
     const name = e.target.getAttribute('name');
-    setColor({
-      ...colors,
-      [name]: primary
-    })
+    const node = document.getElementById(name)
+    node.classList.add('normal', 'primary', 'node')
     const data = {
       phoneNumber: name,
       numdays: 14,
@@ -94,15 +94,19 @@ function Index() {
         const arr2 = res.data.secondContact
         const arrShops = res.data.primaryShops
         const arrShops2 = res.data.secondaryShops
-        const primeContact = res.data.primaryContacts;
+        const primeContact = res.data.primaryContacts
+        const finalContact = res.data.finalContacts
         const color = colors
         const colorShop = shopColor
         const lineZero = zero;
         const lineClose = [];
+        const lineSec = [];
+        const lineThird = [];
         const lineShop = secondShops;
         const lineSecond = secondContacts;
         const tempRed = [];
         const tempYellow = [];
+        const tempCustomer = [];
 
         primeContact.forEach((element, index) => {
           const shop = document.getElementById(element.phoneNumber);
@@ -119,13 +123,32 @@ function Index() {
               setZero(lineZero);
             } else {
               lineClose.push({ x0, y0, x1, y1, end: customer })
+              tempCustomer.push(customer);
             }
           })
-          // colorShop[element.phoneNumber].color = shopRed;
           colorShop[element.phoneNumber].lines = lineClose;
-          tempRed.push(element.phoneNumber)
         });
 
+        finalContact.forEach(element => {
+          const shop = document.getElementById(element.phoneNumber);
+          const { right, left, top, bottom } = shop.getBoundingClientRect()
+          const x0 = (right + left) / 2
+          const y0 = (top + bottom) / 2
+          element.customersToTag.forEach((customer, i) => {
+            const xy = document.getElementById(customer);
+            const { bottom, top, right, left } = xy.getBoundingClientRect();
+            const x1 = (right + left) / 2;
+            const y1 = (bottom + top) / 2;
+            if (tempCustomer.indexOf(customer) !== -1) {
+              lineSec.push({ x0: x1, y0: y1, x1: x0, y1: y0, end: element.phoneNumber })
+              // setSecShop(lineSec);
+              color[customer].lines = lineSec
+            } else {
+              lineThird.push({ x0, y0, x1, y1, end: customer })
+            }
+          })
+          colorShop[element.phoneNumber].lines3 = lineThird;
+        })
         arrShops2.forEach((element, index) => {
           const shop = document.getElementById(element.phoneNumber);
           // if (colorShop[element.phoneNumber].color !== shopRed) {
@@ -133,21 +156,22 @@ function Index() {
           //   tempYellow.push(element.phoneNumber)
           // }
         });
-        arr.forEach(element => {
-          if (element === name) {
-            color[element] = primary
-          } else if (color[element] !== primary) {
-            color[element] = red
-            tempRed.push(element)
-          }
-        });
-        arr2.forEach(element => {
-          if (color[element] !== red && color[element] !== primary) {
-            color[element] = yellow
-            tempYellow.push(element)
-          }
-        });
-        // setColor(color)
+        // arr.forEach(element => {
+        //   if (element === name) {
+        //     color[element] = primary
+        //   } else if (color[element] !== primary) {
+        //     color[element] = red
+        //     tempRed.push(element)
+        //   }
+        // });
+        // arr2.forEach(element => {
+        //   if (color[element] !== red && color[element] !== primary) {
+        //     color[element] = yellow
+        //     tempYellow.push(element)
+        //   }
+        // });
+        // console.log(color)
+        setColor(color)
         setRed(tempRed);
         setYellow(tempYellow);
         setShopColor(colorShop)
@@ -164,71 +188,68 @@ function Index() {
   }
   const [lineDisplay, setLineDisplay] = useState({
     display: 'block',
-    display1: 'block',
-    display2: 'none',
     text: 'Clear Line'
   })
   const clearLine = () => {
     if (lineDisplay.display !== 'none') {
       setLineDisplay({
-        display1: 'none',
-        display2: 'none',
         display: 'none',
         text: 'Show Line'
       })
     } else {
       setLineDisplay({
-        display1: 'block',
-        display2: 'block',
         display: 'block',
         text: 'Clear Line'
       })
     }
-
   }
   const firstStop = (e) => {
     console.log(e)
-    // const colObj = shopColor;
     const name = e.target.getAttribute('name')
-    // colObj[name].color = shopRed
-    const lines = secondShops.concat(shopColor[name].lines);
-    setSecShop(lines);
+    const lines = closeContacts.concat(shopColor[name].lines);
+    setClose(lines);
     const node = document.getElementById(name);
     node.classList.add('red', 'node')
-    // node.style.color = 'rgba(255, 0, 0, 0.644)'
-    // node.style.border = 'rgba(255, 0, 0, 0.644) solid 2px';
-    // setShopColor(colObj);
   }
   const secondStop = (e) => {
     const name = e.target.getAttribute('name')
-    const colObj = colors;
-    colObj[name] = red
-    // setColor(colors => ({ ...colors, ...colObj }))
+    const lines = secondShops.concat(colors[name].lines);
+    setSecShop(lines)
     const node = document.getElementById(name);
     node.classList.add('red', 'node')
-    // node.style.color = 'rgba(255, 0, 0, 0.644)'
-    // node.style.border = 'rgba(255, 0, 0, 0.644) solid 2px';
+  }
+  const [thirdDisplay, setThirdDisplay] = useState('none')
+
+  const thirdStop = (e) => {
+    const name = e.target.getAttribute('name')
+    const node = document.getElementById(name);
+    node.classList.add('yellow', 'node')
+    setThirdDisplay('inline')
+
   }
   return (
     <div>
       <svg style={{ display: `${lineDisplay.display}` }}>
         {zero.map((line, index) => (
-          <line key={index} name={line.end} onAnimationEnd={firstStop} x1={line.x0} y1={line.y0} x2={line.x1} y2={line.y1} style={{ stroke: 'rgb(255,0,0)', strokeWidth: '1px' }} />
+          <line key={index} name={line.end} onAnimationEnd={firstStop} x1={line.x0} y1={line.y0} x2={line.x1} y2={line.y1} style={{ stroke: 'rgb(255,0,0,0.5)', strokeWidth: '3px' }} />
         ))}
+        {/* <span > */}
+        {closeContacts.map((line, index) => (
+          <line name={line.end} onAnimationEnd={secondStop} key={index} x1={line.x0} y1={line.y0} x2={line.x1} y2={line.y1} style={{ stroke: 'rgb(255,0,0,0.3)', strokeWidth: '1px' }} />
+        ))}
+        {/* </span> */}
         {secondShops.map((line, index) => (
-          <line onAnimationEnd={secondStop} name={line.end} key={index} x1={line.x0} y1={line.y0} x2={line.x1} y2={line.y1} style={{ stroke: 'rgb(255,0,0)', strokeWidth: '1px' }} />
+          <line key={index}
+            onAnimationEnd={thirdStop} name={line.end} x1={line.x0} y1={line.y0} x2={line.x1} y2={line.y1} style={{ stroke: 'rgb(255,255,0,0.3)', strokeWidth: '1px' }} />
         ))}
         {/* {contactLines.map((line, index) => (
-          <line key={index} x1={line.x0} y1={line.y0} x2={line.x1} y2={line.y1} style={{ stroke: 'rgb(255,0,0)', strokeWidth: '1px' }} />
-        ))}
-        {contactLines.map((line, index) => (
           <line key={index} x1={line.x0} y1={line.y0} x2={line.x1} y2={line.y1} style={{ stroke: 'rgb(255,0,0)', strokeWidth: '1px' }} />
         ))} */}
       </svg>
       <div className='container' >
         {positions.map((position, index) => (
           <div key={index}
-            className={colors[position.num] || 'normal'}
+            className={colors[position.num].color || 'normal'}
             style={{ top: `${position.y}px`, left: `${position.x}px` }}
             name={position.num}
             id={position.num}
