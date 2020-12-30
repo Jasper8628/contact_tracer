@@ -117,6 +117,7 @@ const tag = async (phoneNumber, numdays) => {
 }
 let primeContact = []
 const secTag = async (arr, isSecRound) => {
+  primeContact = []
   arr.forEach(item => {
     const newSet = new Set();
     const shop = shops.find(shop => shop.shopName === item.shopName);
