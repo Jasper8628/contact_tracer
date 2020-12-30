@@ -40,12 +40,11 @@ app.post('/api', (req, res) => {
               console.log('total sicklies:', final[1].length)
               console.log('total shop hours in question:', parsed[0].length)
               res.json({
-                message: 'second response',
-                closeContact: parsed[1],
-                secondContact: final[0],
-                primaryShops: newData,
+                message: 'query successful',
+                closeContacts: parsed[1],
+                secondContacts: final[0],
                 primaryContacts: parsed[2],
-                secondaryShops: parsed[0]
+                finalContacts: final[2]
               })
             })
         })

@@ -17,6 +17,11 @@ function Index() {
   const [closeContacts, setClose] = useState([]);
   const [secondShops, setSecShop] = useState([]);
   const [secondContacts, setSecCont] = useState([]);
+  const [vis, setVis] = useState({})
+  const [lineDisplay, setLineDisplay] = useState({
+    display: 'block',
+    text: 'Clear Lines'
+  })
   useEffect(() => {
     init()
   }, [])
@@ -37,7 +42,6 @@ function Index() {
     }
     setShop(shopArr)
     setPosition(people)
-
   }
   const genRandom = (array) => {
     const ranNum = Math.floor(Math.random() * array.length);
@@ -58,6 +62,10 @@ function Index() {
     setColor({});
     axios.get('/api').then(res => console.log(res));
   }
+  const genXY = (id) => {
+    const { right, left, top, bottom } = document.getElementById(id).getBoundingClientRect();
+    return [(right + left) / 2, (top + bottom) / 2]
+  }
 
   const handleClick = (e) => {
     const name = e.target.getAttribute('name');
@@ -73,43 +81,51 @@ function Index() {
     }
     axios.post('/api', data)
       .then(res => {
-        console.log(res.data)
-        const arr = res.data.closeContact
-        const arr2 = res.data.secondContact
-        const arrShops = res.data.primaryShops
-        const arrShops2 = res.data.secondaryShops
+        const arr = res.data.closeContacts
+        const arr2 = res.data.secondContacts
         const primeContact = res.data.primaryContacts;
+        const finalContact = res.data.finalContacts;
         const color = colors
         const shopCol = shopColor
         const lineZero = zero;
         const lineClose = closeContacts;
         const lineShop = secondShops;
         const lineSecond = secondContacts;
+        const tempCustomerArr = [];
+        const tempShopArr = []
 
-        primeContact.forEach((element, index) => {
-          const shop = document.getElementById(element.phoneNumber);
-          const { right, left, top, bottom } = shop.getBoundingClientRect()
-          const x0 = (right + left) / 2
-          const y0 = (top + bottom) / 2
-          element.customersToTag.forEach((customer, i) => {
-            console.log('logging customer: ', customer)
-            const xy = document.getElementById(customer);
-            const { bottom, top, right, left } = xy.getBoundingClientRect();
-            const x1 = (right + left) / 2;
-            const y1 = (bottom + top) / 2;
+        primeContact.forEach((element) => {
+          tempShopArr.push(element.phoneNumber)
+          const [x0, y0] = genXY(element.phoneNumber)
+          element.customersToTag.forEach((customer) => {
+            const [x1, y1] = genXY(customer)
             if (customer === name) {
               lineZero.push({ x0: x1, y0: y1, x1: x0, y1: y0 })
               setZero(lineZero);
             } else {
               lineClose.push({ x0, y0, x1, y1 })
+              tempCustomerArr.push(customer)
               setClose(lineClose)
             }
           })
           shopCol[element.phoneNumber] = shopRed;
         });
 
-        arrShops2.forEach((element, index) => {
-          const shop = document.getElementById(element.phoneNumber);
+        finalContact.forEach((element) => {
+          const shopNum = element.phoneNumber
+          const [x0, y0] = genXY(shopNum)
+          element.customersToTag.forEach((customer) => {
+            const [x1, y1] = genXY(customer)
+            if (tempCustomerArr.indexOf(customer) !== -1) {
+              if (tempShopArr.indexOf(shopNum) === -1) {
+                lineShop.push({ x0: x1, y0: y1, x1: x0, y1: y0 })
+                setSecShop(lineShop);
+              }
+            } else if (customer !== name) {
+              lineSecond.push({ x0, y0, x1, y1 })
+              setSecCont(lineSecond)
+            }
+          })
           if (shopCol[element.phoneNumber] !== shopRed) {
             shopCol[element.phoneNumber] = shopYellow
           }
@@ -126,56 +142,58 @@ function Index() {
             color[element] = yellow
           }
         });
-        setColor(color)
         setShopColor(shopCol)
+        setColor(color)
       })
   }
-  const test = (e) => {
-    const name = e.target.getAttribute('id')
-    console.log('logging id: ', name)
-    const subject = document.getElementById(name);
-    const x = subject.getBoundingClientRect().x
-    const y = subject.getBoundingClientRect().y
-    // console.log('shop number: ', name, 'position: ', x, ' ', y)
-    // console.log(shopColor)
+  const handleVis = (e) => {
+    const name = e.target.getAttribute('name')
+    if (vis[name] !== 'hidden') {
+      setVis({
+        ...vis,
+        [name]: 'hidden'
+      })
+    } else {
+      setVis({
+        ...vis,
+        [name]: 'visible'
+      })
+    }
   }
-  const [lineDisplay, setLineDisplay] = useState({
-    display: 'block',
-    text: 'Clear Line'
-  })
   const clearLine = () => {
     if (lineDisplay.display !== 'none') {
       setLineDisplay({
         display: 'none',
-        text: 'Show Line'
+        text: 'Show Lines'
       })
     } else {
       setLineDisplay({
         display: 'block',
-        text: 'Clear Line'
+        text: 'Clear Lines'
       })
     }
-
-  }
-  const firstshops = () => {
-
   }
   return (
     <div>
-      <svg style={{ display: `${lineDisplay.display}` }}>
+      <svg style={{ display: `${lineDisplay.display}`, visibility: `${vis['1st']}` }}>
         {zero.map((line, index) => (
-          <line key={index} onAnimationEnd={firstshops} x1={line.x0} y1={line.y0} x2={line.x1} y2={line.y1} style={{ stroke: 'rgb(255,0,0)', strokeWidth: '1px' }} />
+          <line className='line1' key={index} x1={line.x0} y1={line.y0} x2={line.x1} y2={line.y1} />
         ))}
-        {closeContacts.map((line, index) => (
-          <line key={index} x1={line.x0} y1={line.y0} x2={line.x1} y2={line.y1} style={{ stroke: 'rgb(255,0,0)', strokeWidth: '1px' }} />
-        ))}
-        {/* {contactLines.map((line, index) => (
-          <line key={index} x1={line.x0} y1={line.y0} x2={line.x1} y2={line.y1} style={{ stroke: 'rgb(255,0,0)', strokeWidth: '1px' }} />
-        ))}
-        {contactLines.map((line, index) => (
-          <line key={index} x1={line.x0} y1={line.y0} x2={line.x1} y2={line.y1} style={{ stroke: 'rgb(255,0,0)', strokeWidth: '1px' }} />
-        ))} */}
       </svg>
+      <svg style={{ display: `${lineDisplay.display}`, visibility: `${vis['2nd']}` }}>
+        {closeContacts.map((line, index) => (
+          <line className='line2' key={index} x1={line.x0} y1={line.y0} x2={line.x1} y2={line.y1} />
+        ))}
+      </svg>
+      <svg style={{ display: `${lineDisplay.display}`, visibility: `${vis['3rd']}` }}>
+        {secondShops.map((line, index) => (
+          <line className='line3' key={index} x1={line.x0} y1={line.y0} x2={line.x1} y2={line.y1} />
+        ))}
+      </svg>
+      <svg style={{ display: `${lineDisplay.display}`, visibility: `${vis['4th']}` }}>
+        {secondContacts.map((line, index) => (
+          <line className='line4' key={index} x1={line.x0} y1={line.y0} x2={line.x1} y2={line.y1} />
+        ))}</svg>
       <div className='container' >
         {positions.map((position, index) => (
           <div key={index}
@@ -183,7 +201,6 @@ function Index() {
             style={{ top: `${position.y}px`, left: `${position.x}px` }}
             name={position.num}
             id={position.num}
-            // onMouseOver={test}
             onClick={handleClick} >
           </div>
         ))}
@@ -191,20 +208,21 @@ function Index() {
           <div key={index} className={shopColor[shop.num] || 'shop'}
             id={shop.num}
             style={{ top: `${shop.y}px`, left: `${shop.x}px` }}
-            // onMouseOver={test}
             name={shop.num}
           >
             <span name={shop.num} className={shop.icon}> </span>
-
           </div>
         ))}
-        {/* <div className='shop' style={{ background: 'green', top: '0', left: '0' }}></div> */}
+        <div className='buttonContainer'>
+          <button name='1st' onClick={handleVis} >1st</button>
+          <button name='2nd' onClick={handleVis} >2nd</button>
+          <button name='3rd' onClick={handleVis} >3rd</button>
+          <button name='4th' onClick={handleVis} >4th</button>
+        </div>
         <button id='reset' onClick={reset} >Reset </button>
         <button id='clearLine' onClick={clearLine} >{lineDisplay.text}</button>
       </div>
-
     </div>
-
   )
 }
 

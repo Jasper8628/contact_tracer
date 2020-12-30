@@ -10,7 +10,8 @@ const durations = [30, 60, 90, 120, 150];
 const gap = [];
 const numCustomers = 2000;
 const numShops = 100;
-const visits = 2;
+const visits = 6
+const offset = 3;
 for (let i = 0; i < 12; i++) {
   gap.push(5 * i)
 }
@@ -28,8 +29,8 @@ const countDay = (iter) => {
   return newDate;
 }
 
-const generateVisit = (iter, customer, visits) => {
-  const ranNum = Math.floor(Math.random() * visits);
+const generateVisit = (iter, customer, visits, offset) => {
+  const ranNum = Math.floor(Math.random() * visits) - offset;
   const newDate = countDay(iter);
   let hour = genRandom(openingHours)
   customer[newDate] = [];
@@ -87,7 +88,7 @@ const restart = () => {
       'status': 'negative'
     };
     for (let j = 0; j < 14; j++) {
-      generateVisit(j, customers[numStr], visits)
+      generateVisit(j, customers[numStr], visits, offset)
     }
   }
 }
@@ -171,7 +172,7 @@ const secTag = async (arr, isSecRound) => {
   } else {
     const result = Array.from(secSet);
     const total = Array.from(set);
-    return JSON.stringify([result, total])
+    return JSON.stringify([result, total, primeContact])
   }
 }
 
