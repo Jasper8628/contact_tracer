@@ -32,14 +32,14 @@ function Index() {
     const shopArr = []
     for (let i = 0; i < 2000; i++) {
       const num = '0' + (500000000 + i);
-      const x = Math.ceil(Math.random() * 1450 + 30)
-      const y = Math.ceil(Math.random() * 800 + 30)
+      const x = Math.random() * 55 + 2
+      const y = Math.random() * 55 + 5
       people.push({ x, y, num })
     }
     for (let i = 0; i < 100; i++) {
       const num = '0' + (900000000 + i);
-      const x = Math.ceil(Math.random() * 1450 + 20)
-      const y = Math.ceil(Math.random() * 800 + 20)
+      const x = Math.random() * 55 + 2
+      const y = Math.random() * 55 + 5
       shopArr.push({ x, y, num, icon: genRandom(icons) })
     }
     setShop(shopArr)
@@ -200,7 +200,7 @@ function Index() {
         {positions.map((position, index) => (
           <div key={index}
             className={colors[position.num] || 'normal'}
-            style={{ top: `${position.y}px`, left: `${position.x}px` }}
+            style={{ top: `${position.y}vh`, left: `${position.x}vw` }}
             name={position.num}
             id={position.num}
             onClick={handleClick} >
@@ -209,7 +209,7 @@ function Index() {
         {shops.map((shop, index) => (
           <div key={index} className={shopColor[shop.num] || 'shop'}
             id={shop.num}
-            style={{ top: `${shop.y}px`, left: `${shop.x}px` }}
+            style={{ top: `${shop.y}vh`, left: `${shop.x}vw` }}
             name={shop.num}
           >
             <span name={shop.num} className={shop.icon}> </span>
