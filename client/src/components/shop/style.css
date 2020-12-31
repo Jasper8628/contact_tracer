@@ -61,6 +61,16 @@ line{
   stroke-width: 1px; 
   animation-delay: 6s;
 }
+.highLight{
+  stroke: rgba(255, 255, 255, 1);
+  stroke-width: 1px; 
+  opacity: 1;
+}
+.highLightend{
+  stroke: rgba(255, 255, 255, 0.8);
+  stroke-width: 3px; 
+  opacity: 1;
+}
 @keyframes grow {
   to{
     stroke-dashoffset: 0;

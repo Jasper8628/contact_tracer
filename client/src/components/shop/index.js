@@ -17,10 +17,13 @@ function Index() {
   const [closeContacts, setClose] = useState([]);
   const [secondShops, setSecShop] = useState([]);
   const [secondContacts, setSecCont] = useState([]);
-  const [vis, setVis] = useState({})
+  const [highLight, setHighLight] = useState({})
   const [lineDisplay, setLineDisplay] = useState({
     display: 'block',
     text: 'Clear Lines'
+  })
+  const [otherLines, setOtherlins] = useState({
+    line1: 'line1', line2: 'line2', line3: 'line3', line4: 'line4', toggle: false, text: 'toggle', currentLines: {}
   })
 
   useEffect(() => {
@@ -51,11 +54,6 @@ function Index() {
   }
 
   const reset = () => {
-    const arr = document.getElementsByClassName('shop');
-    console.log(arr.length)
-    for (let i = 0; i < arr.length; i++) {
-      arr[i].classList.remove('red', 'yellow', 'primary')
-    }
     setZero([])
     setClose([])
     setSecShop([])
@@ -100,10 +98,10 @@ function Index() {
           element.customersToTag.forEach((customer) => {
             const [x1, y1] = genXY(customer)
             if (customer === name) {
-              lineZero.push({ x0: x1, y0: y1, x1: x0, y1: y0 })
+              lineZero.push({ x0: x1, y0: y1, x1: x0, y1: y0, start: customer, end: element.phoneNumber })
               setZero(lineZero);
             } else {
-              lineClose.push({ x0, y0, x1, y1 })
+              lineClose.push({ x0, y0, x1, y1, start: element.phoneNumber, end: customer })
               tempCustomerArr.push(customer)
               setClose(lineClose)
             }
@@ -118,11 +116,11 @@ function Index() {
             const [x1, y1] = genXY(customer)
             if (tempCustomerArr.indexOf(customer) !== -1) {
               if (tempShopArr.indexOf(shopNum) === -1) {
-                lineShop.push({ x0: x1, y0: y1, x1: x0, y1: y0 })
+                lineShop.push({ x0: x1, y0: y1, x1: x0, y1: y0, start: customer, end: element.phoneNumber })
                 setSecShop(lineShop);
               }
             } else if (customer !== name) {
-              lineSecond.push({ x0, y0, x1, y1 })
+              lineSecond.push({ x0, y0, x1, y1, start: element.phoneNumber, end: customer })
               setSecCont(lineSecond)
             }
           })
@@ -150,17 +148,58 @@ function Index() {
   }
   const handleVis = (e) => {
     const name = e.target.getAttribute('name')
-    if (vis[name] !== 'hidden') {
-      setVis({
-        ...vis,
-        [name]: 'hidden'
+    console.log(name)
+    if (otherLines[name] === name) {
+      setOtherlins({
+        ...otherLines,
+        [name]: ''
       })
     } else {
-      setVis({
-        ...vis,
-        [name]: 'visible'
+      setOtherlins({
+        ...otherLines,
+        [name]: name
       })
     }
+  }
+  const handleHover = (e) => {
+    const name = e.target.getAttribute('name');
+    if (otherLines.toggle && checkNode(name)) {
+      const currentLines = otherLines
+      setOtherlins({ ...otherLines, line1: '', line2: '', line3: '', line4: '', currentLines })
+      const lineArr = highLight;
+      lineArr[name] = 'highLight'
+      setHighLight(lineArr)
+    }
+  }
+  const handleLeave = (e) => {
+    const name = e.target.getAttribute('name');
+    if (otherLines.toggle && checkNode(name)) {
+      const currentLines = otherLines.currentLines
+      setOtherlins(currentLines)
+      const lineArr = highLight;
+      lineArr[name] = ''
+      setHighLight(lineArr)
+    }
+  }
+  const handleToggle = () => {
+    if (!otherLines.toggle) {
+      setOtherlins({
+        ...otherLines,
+        toggle: true,
+        text: 'toggled'
+      })
+    } else {
+      setOtherlins({
+        ...otherLines,
+        toggle: false,
+        text: 'toggle'
+      })
+    }
+  }
+  const checkNode = (id) => {
+    if (document.getElementById(id).classList.length > 1) {
+      return true
+    } else { return false }
   }
   const clearLine = () => {
     if (lineDisplay.display !== 'none') {
@@ -177,24 +216,28 @@ function Index() {
   }
   return (
     <div>
-      <svg style={{ display: `${lineDisplay.display}`, visibility: `${vis['1st']}` }}>
+      <svg style={{ display: `${lineDisplay.display}` }}>
         {zero.map((line, index) => (
-          <line className='line1' key={index} x1={line.x0} y1={line.y0} x2={line.x1} y2={line.y1} />
+          <line className={`${otherLines.line1} ${highLight[line.start]} ${highLight[line.end]}end`}
+            key={index} x1={line.x0} y1={line.y0} x2={line.x1} y2={line.y1} />
         ))}
       </svg>
-      <svg style={{ display: `${lineDisplay.display}`, visibility: `${vis['2nd']}` }}>
+      <svg style={{ display: `${lineDisplay.display}` }}>
         {closeContacts.map((line, index) => (
-          <line className='line2' key={index} x1={line.x0} y1={line.y0} x2={line.x1} y2={line.y1} />
+          <line className={`${otherLines.line2} ${highLight[line.start]} ${highLight[line.end]}end`}
+            key={index} x1={line.x0} y1={line.y0} x2={line.x1} y2={line.y1} />
         ))}
       </svg>
-      <svg style={{ display: `${lineDisplay.display}`, visibility: `${vis['3rd']}` }}>
+      <svg style={{ display: `${lineDisplay.display}` }}>
         {secondShops.map((line, index) => (
-          <line className='line3' key={index} x1={line.x0} y1={line.y0} x2={line.x1} y2={line.y1} />
+          <line className={`${otherLines.line3} ${highLight[line.start]} ${highLight[line.end]}end`}
+            key={index} x1={line.x0} y1={line.y0} x2={line.x1} y2={line.y1} />
         ))}
       </svg>
-      <svg style={{ display: `${lineDisplay.display}`, visibility: `${vis['4th']}` }}>
+      <svg style={{ display: `${lineDisplay.display}` }}>
         {secondContacts.map((line, index) => (
-          <line className='line4' key={index} x1={line.x0} y1={line.y0} x2={line.x1} y2={line.y1} />
+          <line className={`${otherLines.line4} ${highLight[line.start]} ${highLight[line.end]}end`}
+            key={index} x1={line.x0} y1={line.y0} x2={line.x1} y2={line.y1} />
         ))}</svg>
       <div className='container' >
         {positions.map((position, index) => (
@@ -203,7 +246,9 @@ function Index() {
             style={{ top: `${position.y}vh`, left: `${position.x}vw` }}
             name={position.num}
             id={position.num}
-            onClick={handleClick} >
+            onClick={handleClick}
+            onMouseOver={handleHover}
+            onMouseOut={handleLeave} >
           </div>
         ))}
         {shops.map((shop, index) => (
@@ -211,15 +256,18 @@ function Index() {
             id={shop.num}
             style={{ top: `${shop.y}vh`, left: `${shop.x}vw` }}
             name={shop.num}
+            onMouseOver={handleHover}
+            onMouseOut={handleLeave}
           >
             <span name={shop.num} className={shop.icon}> </span>
           </div>
         ))}
         <div className='buttonContainer'>
-          <button name='1st' onClick={handleVis} >1st</button>
-          <button name='2nd' onClick={handleVis} >2nd</button>
-          <button name='3rd' onClick={handleVis} >3rd</button>
-          <button name='4th' onClick={handleVis} >4th</button>
+          <button name='line1' onClick={handleVis} >1st</button>
+          <button name='line2' onClick={handleVis} >2nd</button>
+          <button name='line3' onClick={handleVis} >3rd</button>
+          <button name='line4' onClick={handleVis} >4th</button>
+          <button name='toggle-highlight' onClick={handleToggle} >{otherLines.text} </button>
         </div>
         <button id='reset' onClick={reset} >Reset </button>
         <button id='clearLine' onClick={clearLine} >{lineDisplay.text}</button>
