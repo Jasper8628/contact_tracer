@@ -165,7 +165,14 @@ function Index() {
     const name = e.target.getAttribute('name');
     if (otherLines.toggle && checkNode(name)) {
       const currentLines = otherLines
-      setOtherlins({ ...otherLines, line1: '', line2: '', line3: '', line4: '', currentLines })
+      setOtherlins({
+        ...otherLines,
+        line1: otherLines.line1 === 'line1' ? 'line1dim' : '',
+        line2: otherLines.line2 === 'line2' ? 'line2dim' : '',
+        line3: otherLines.line3 === 'line3' ? 'line3dim' : '',
+        line4: otherLines.line4 === 'line4' ? 'line4dim' : '',
+        currentLines
+      })
       const lineArr = highLight;
       lineArr[name] = 'highLight'
       setHighLight(lineArr)

@@ -40,14 +40,22 @@ line{
   stroke-dashoffset: 1500;
   animation: grow 3s linear forwards;
   animation-timing-function:ease-in-out
-
 }
 .line1{
   stroke: rgb(255,0,0,0.6);
   stroke-width: 3px;
 }
+.lin1dim{
+  stroke: rgb(255,0,0,0.1);
+  stroke-width: 3px;
+}
 .line2{
   stroke: rgb(255,0,0,0.6);
+  stroke-width: 3px ;
+  animation-delay: 2s;
+}
+.line2dim{
+  stroke: rgb(255,0,0,0.1);
   stroke-width: 3px ;
   animation-delay: 2s;
 }
@@ -56,18 +64,28 @@ line{
   stroke-width:3px;
   animation-delay: 4s;
 }
+.line3dim{
+  stroke: rgb(255,255,0,0.1);
+  stroke-width:3px;
+  animation-delay: 4s;
+}
 .line4{
   stroke: rgb(255,255,0,0.5);
   stroke-width: 1px; 
   animation-delay: 6s;
 }
-.highLight{
-  stroke: rgba(255, 255, 255, 1);
+.line4dim{
+  stroke: rgb(255,255,0,0.1);
   stroke-width: 1px; 
+  animation-delay: 6s;
+}
+.highLight{
+  stroke: rgba(255, 255, 255, 0.7);
+  stroke-width: 2px; 
   opacity: 1;
 }
 .highLightend{
-  stroke: rgba(255, 255, 255, 0.8);
+  stroke: rgba(255, 255, 255, 0.9);
   stroke-width: 3px; 
   opacity: 1;
 }
