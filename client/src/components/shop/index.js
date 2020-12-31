@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios';
 import './style.css'
-const red = 'red normal'
+const red = 'red normal';
 const yellow = 'yellow normal';
 const primary = 'primary normal'
-const shopRed = 'red shop'
+const shopRed = 'red shop';
+const shopYR = 'red shop yToR';
 const shopYellow = 'yellow shop'
 const icons = ['fas fa-utensils', 'fas fa-cocktail', 'fas fa-coffee', 'fas fa-shopping-cart', 'fas fa-swimmer', 'fas fa-bus-alt', 'far fa-building', 'fas fa-stethoscope']
 
@@ -18,6 +19,10 @@ function Index() {
   const [secondShops, setSecShop] = useState([]);
   const [secondContacts, setSecCont] = useState([]);
   const [highLight, setHighLight] = useState({})
+  const [highlightSwitch, setSwitch] = useState({
+    status: true,
+    text: 'far fa-dot-circle'
+  })
   const [lineDisplay, setLineDisplay] = useState({
     display: 'block',
     text: 'Clear Lines',
@@ -70,6 +75,24 @@ function Index() {
 
   const handleClick = (e) => {
     const name = e.target.getAttribute('name');
+    if (checkNode(name)) {
+      const lineArr = highLight;
+      lineArr[name] = ''
+      // axios.post('/api/info', name)
+      // .then(res=>{
+      //   console.log('res')
+      // })
+    }
+    setOtherlins({
+      line1: 'line1',
+      line2: 'line2',
+      line3: 'line3',
+      line4: 'line4',
+      toggle: false,
+      text: 'far fa-circle',
+      currentLines: {}
+    })
+
     setColor({
       ...colors,
       [name]: primary
@@ -107,7 +130,11 @@ function Index() {
               setClose(lineClose)
             }
           })
-          shopCol[element.phoneNumber] = shopRed;
+          if (shopCol[element.phoneNumber] === shopYellow) {
+            shopCol[element.phoneNumber] = shopYR;
+          } else {
+            shopCol[element.phoneNumber] = shopRed;
+          }
         });
 
         finalContact.forEach((element) => {
@@ -125,7 +152,7 @@ function Index() {
               setSecCont(lineSecond)
             }
           })
-          if (shopCol[element.phoneNumber] !== shopRed) {
+          if (shopCol[element.phoneNumber] !== shopRed && shopCol[element.phoneNumber] !== shopYR) {
             shopCol[element.phoneNumber] = shopYellow
           }
         });
@@ -170,9 +197,15 @@ function Index() {
       })
     }
   }
+  const handleSwitch = () => {
+    setSwitch({
+      status: highlightSwitch.status ? false : true,
+      text: highlightSwitch.text === 'far fa-dot-circle' ? 'far fa-circle' : 'far fa-dot-circle'
+    })
+  }
   const handleHover = (e) => {
     const name = e.target.getAttribute('name');
-    if (otherLines.toggle && checkNode(name)) {
+    if (highlightSwitch.status && otherLines.toggle && checkNode(name)) {
       const currentLines = otherLines
       setOtherlins({
         ...otherLines,
@@ -188,13 +221,22 @@ function Index() {
     }
   }
   const handleLeave = (e) => {
-    const name = e.target.getAttribute('name');
-    if (otherLines.toggle && checkNode(name)) {
-      const currentLines = otherLines.currentLines
-      setOtherlins(currentLines)
-      const lineArr = highLight;
-      lineArr[name] = ''
-      setHighLight(lineArr)
+    if (highlightSwitch.status) {
+      const name = e.target.getAttribute('name');
+      if (otherLines.toggle && checkNode(name)) {
+        const currentLines = otherLines.currentLines
+        setOtherlins(currentLines)
+        const lineArr = highLight;
+        lineArr[name] = ''
+        setHighLight(lineArr)
+      } else if (!otherLines.toggle) {
+        setOtherlins({
+          ...otherLines,
+          toggle: true,
+          text: 'far fa-dot-circle'
+        })
+      }
+
     }
   }
   const handleToggle = () => {
@@ -298,7 +340,7 @@ function Index() {
           <span name='line2' onClick={handleVis} className={`${checkbox['line2']} checkFont`} /><div name='line2' onClick={handleVis}><span className='redLineThin' /> </div>
           <span name='line3' onClick={handleVis} className={`${checkbox['line3']} checkFont`} /><div name='line3' onClick={handleVis}><span className='yellowLineThick' /> </div>
           <span name='line4' onClick={handleVis} className={`${checkbox['line4']} checkFont`} /><div name='line4' onClick={handleVis}><span className='yellowLineThin' /> </div>
-          <span name='toggle-highlight' onClick={handleToggle} className={`${otherLines.text} checkFont`} /><label onClick={handleToggle} >Hover to highlight</label>
+          <span name='toggle-highlight' onClick={handleSwitch} className={`${highlightSwitch.text} checkFont`} /><label onClick={handleSwitch} >Hover highlighting</label>
         </div>
         <button id='reset' onClick={reset} > <span className='fas fa-power-off'></span> Reset </button>
         <button id='clearLine' onClick={clearLine} ><span className={lineDisplay.fa}></span> {lineDisplay.text}</button>

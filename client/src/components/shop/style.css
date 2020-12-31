@@ -141,6 +141,22 @@ line{
   z-index: 11;
   }
 }
+@keyframes fadeInYtoR{
+  0%{
+  color:rgba(255, 255, 0, 0.726) ;
+  border: rgba(255, 255, 0, 0.6) solid 2px;
+  }
+  30%{
+  color:rgba(255, 255, 0, 1) ;
+  border: rgba(255, 255, 0, 1) solid 2px;
+  }
+  100%{
+  color:rgba(255, 0, 0, 0.8) ;
+  border: rgba(255, 0, 0, 0.6) solid 2px;
+  background: black;
+  z-index: 11;
+  }
+}
 @keyframes fadeInRedNormal{
   0%{
   border: rgba(17, 186, 238, 0.315) solid 2px;
@@ -174,6 +190,9 @@ line{
 }
 .red.shop{
   animation: fadeInRed 1.5s linear forwards;
+}
+.yToR.shop{
+  animation: fadeInYtoR 1.5s linear forwards;
 }
 .red.normal{
   animation: fadeInRedNormal 4s linear forwards;
