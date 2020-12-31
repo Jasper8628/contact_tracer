@@ -18,8 +18,8 @@
   position: absolute;
   left:50%;
   top:50%;
-  width: 50vw;
-  height: 50vh;
+  width: 60vw;
+  height: 60vh;
   transform: translate(-50%,-50%) ;
   /* background: rgba(7, 233, 7, 0.808); */
   background: rgb(7, 7, 7);
@@ -36,8 +36,8 @@ svg{
   z-index: 5;
 }
 line{
-  stroke-dasharray: 1500;
-  stroke-dashoffset: 1500;
+  stroke-dasharray: 2500;
+  stroke-dashoffset: 2500;
   animation: grow 3s linear forwards;
   animation-timing-function:ease-in-out
 }
@@ -45,7 +45,7 @@ line{
   stroke: rgb(255,0,0,0.6);
   stroke-width: 3px;
 }
-.lin1dim{
+.line1dim{
   stroke: rgb(255,0,0,0.1);
   stroke-width: 3px;
 }
@@ -191,12 +191,14 @@ line{
   bottom: 2%;
   right: 5%;
   margin: 5px;
-  border: rgba(17, 186, 238, 0.915) solid 2px;
+  /* border: rgba(17, 186, 238, 0.915) solid 2px; */
+  border: none;
   border-radius: 50px;
-  width: 6em;
+  /* width: 6em; */
   height: 3em;
-  background: black;
+  background: transparent;
   color: rgba(17, 186, 238, 0.915);
+  /* color: rgba(255, 255, 255, 0.644); */
   outline: none;
 }
 #clearLine{
@@ -205,27 +207,162 @@ line{
   bottom: 2%;
   right: 15%;
   margin: 5px;
-  border: rgba(17, 186, 238, 0.915) solid 2px;
+  /* border: rgba(17, 186, 238, 0.915) solid 2px; */
+  border: none;
   border-radius: 50px;
-  width: 6em;
+  /* width: 6em; */
   height: 3em;
-  background: black;
+  background: transparent;
   color: rgba(17, 186, 238, 0.915);
+  /* color: rgba(255, 255, 255, 0.637); */
   outline: none;
-}
-.buttonContainer{
-  position: absolute;
-  bottom: 2%;
 }
 .buttonContainer button{
   margin: 5px;
-  border: rgba(17, 186, 238, 0.915) solid 2px;
-  border-radius: 50px;
   width: 6em;
   height: 3em;
   background: black;
   color: rgba(17, 186, 238, 0.915);
   outline: none;
   cursor: pointer;
+  border: rgba(17, 186, 238, 0.915) solid 2px;
+  border-radius: 50px;
+}
+.headBar{
+  position: absolute;
+  top:1%;
+  left:2vw;
+  display: flexbox;
+  width: 50vw;
+  height: 2vh;
+  align-items: center;
+  /* border: rgba(17, 186, 238, 0.915) solid 1px; */
+}
+.headBar select{
+  margin: 10px;
+}
+.headBar p{
+  display: inline;
+  color: rgba(255, 255, 255, 0.705);
+  margin-right: 5px;
+}
+.headBar h3{
+  display: inline;
+  color: rgba(255, 255, 255, 0.705);
+  margin-right: 2%;
+}
+.headBar input{
+  height: 2vh;
+  padding-left: 15px;
+  color: white;
+  background: rgb(17, 17, 17);
+  border: none;
+  outline: none;
+  border-radius: 10px;
+  margin-right: 10px;
+}
+#tag{
+  width: 3vw;
+  height: 3vh;
+  font-size: 0.75vw;
+  /* border: rgba(17, 186, 238, 0.915) solid 2px; */
+  /* border-radius: 50%; */
+  border: none;
+  color: rgba(17, 186, 238, 0.915);
+  outline: none;
+  cursor: pointer;
+  border-radius: 50px;
+  background: transparent;
+  margin-left: -1%;
 
+}
+#random{
+  font-size: 1em;
+  font-weight:500 ;
+  /* width: 5em; */
+  height: 2em;
+  color: rgba(17, 186, 238, 0.915);
+  /* border: rgba(17, 186, 238, 0.915) solid 2px; */
+  border: none;
+  border-radius: 50%;
+  outline: none;
+  cursor: pointer;
+  border-radius: 50px;
+  background: transparent;
+}
+button span{
+  margin-right: 5px;
+}
+.buttonContainer{
+  position: absolute;
+  display: flexbox;
+  height: 2vh;
+  bottom: 2%;
+  left: 2vw;
+  padding-bottom: 5px;
+  margin-bottom: 5px;
+  /* align-items: center; */
+  vertical-align: middle;
+}
+.buttonContainer label{
+  color: rgba(255, 255, 255, 0.705);
+  margin-left: 5px;
+  cursor: pointer;
+}
+.buttonContainer div{
+  cursor: pointer;
+  display: inline;
+}
+.buttonContainer .checkFont{
+  cursor: pointer;
+  color: rgba(17, 186, 238, 0.915);
+  margin-right: 5px;
+}
+.redLineThick{
+  pointer-events: none;
+  /* border-radius:2px; */
+  display: inline-flex;
+  height: 3px;
+  width: 2vw;
+  background: rgba(255, 0, 0, 0.651);
+  border:none;
+  margin-bottom:0.3vh;
+  margin-left: 5px;
+  margin-right: 1vw;
+}
+.redLineThin{
+  pointer-events: none;
+  /* border-radius:2px; */
+  display: inline-flex;
+  height: 1px;
+  width: 2vw;
+  background: rgba(255, 0, 0, 0.657);
+  border:none;
+  margin-bottom:0.4vh;
+  margin-left: 5px;
+  margin-right: 1vw;
+}
+.yellowLineThick{
+  pointer-events: none;
+  /* border-radius:2px; */
+  display: inline-flex;
+  height: 3px;
+  width: 2vw;
+  background: rgba(255, 255, 0, 0.609);
+  border:none;
+  margin-bottom:0.3vh;
+  margin-left: 5px;
+  margin-right: 1vw;
+}
+.yellowLineThin{
+  pointer-events: none;
+  /* border-radius:2px; */
+  display: inline-flex;
+  height: 1px;
+  width: 2vw;
+  background: rgba(255, 255, 0, 0.609);
+  border:none;
+  margin-bottom:0.4vh;
+  margin-left: 5px;
+  margin-right: 1vw;
 }

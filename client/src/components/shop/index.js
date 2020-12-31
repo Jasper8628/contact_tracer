@@ -20,10 +20,11 @@ function Index() {
   const [highLight, setHighLight] = useState({})
   const [lineDisplay, setLineDisplay] = useState({
     display: 'block',
-    text: 'Clear Lines'
+    text: 'Clear Lines',
+    fa: 'fas fa-eye-slash'
   })
   const [otherLines, setOtherlins] = useState({
-    line1: 'line1', line2: 'line2', line3: 'line3', line4: 'line4', toggle: false, text: 'toggle', currentLines: {}
+    line1: 'line1', line2: 'line2', line3: 'line3', line4: 'line4', toggle: false, text: 'far fa-circle', currentLines: {}
   })
 
   useEffect(() => {
@@ -35,14 +36,14 @@ function Index() {
     const shopArr = []
     for (let i = 0; i < 2000; i++) {
       const num = '0' + (500000000 + i);
-      const x = Math.random() * 55 + 2
-      const y = Math.random() * 55 + 5
+      const x = Math.random() * 65 + 2
+      const y = Math.random() * 65 + 5
       people.push({ x, y, num })
     }
     for (let i = 0; i < 100; i++) {
       const num = '0' + (900000000 + i);
-      const x = Math.random() * 55 + 2
-      const y = Math.random() * 55 + 5
+      const x = Math.random() * 65 + 2
+      const y = Math.random() * 65 + 5
       shopArr.push({ x, y, num, icon: genRandom(icons) })
     }
     setShop(shopArr)
@@ -146,18 +147,26 @@ function Index() {
         setColor(color)
       })
   }
+  const [checkbox, setCheckbox] = useState({ 'line1': 'far fa-dot-circle', 'line2': 'far fa-dot-circle', 'line3': 'far fa-dot-circle', 'line4': 'far fa-dot-circle' })
   const handleVis = (e) => {
     const name = e.target.getAttribute('name')
-    console.log(name)
     if (otherLines[name] === name) {
       setOtherlins({
         ...otherLines,
         [name]: ''
       })
+      setCheckbox({
+        ...checkbox,
+        [name]: 'far fa-circle'
+      })
     } else {
       setOtherlins({
         ...otherLines,
         [name]: name
+      })
+      setCheckbox({
+        ...checkbox,
+        [name]: 'far fa-dot-circle'
       })
     }
   }
@@ -193,13 +202,13 @@ function Index() {
       setOtherlins({
         ...otherLines,
         toggle: true,
-        text: 'toggled'
+        text: 'far fa-dot-circle'
       })
     } else {
       setOtherlins({
         ...otherLines,
         toggle: false,
-        text: 'toggle'
+        text: 'far fa-circle'
       })
     }
   }
@@ -212,12 +221,14 @@ function Index() {
     if (lineDisplay.display !== 'none') {
       setLineDisplay({
         display: 'none',
-        text: 'Show Lines'
+        text: 'Show Lines',
+        fa: 'fas fa-eye'
       })
     } else {
       setLineDisplay({
         display: 'block',
-        text: 'Clear Lines'
+        text: 'Clear Lines',
+        fa: 'fas fa-eye-slash'
       })
     }
   }
@@ -247,6 +258,19 @@ function Index() {
             key={index} x1={line.x0} y1={line.y0} x2={line.x1} y2={line.y1} />
         ))}</svg>
       <div className='container' >
+        <div className='headBar'>
+          <h3>Trace someone by phone number: </h3>
+          <p>0440-00-</p>
+          <input id='tagInput' placeholder='number 1 - 2000...' />
+          <select>
+            <option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option>
+            <option>10</option><option>11</option><option>12</option><option>13</option><option>14</option>
+          </select>
+          <p>days since exposure</p>
+          <button id='tag'><span className='fas fa-search'></span> </button>
+          <h3>or </h3>
+          <button id='random' ><span className='fas fa-random'></span> Random</button>
+        </div>
         {positions.map((position, index) => (
           <div key={index}
             className={colors[position.num] || 'normal'}
@@ -270,14 +294,14 @@ function Index() {
           </div>
         ))}
         <div className='buttonContainer'>
-          <button name='line1' onClick={handleVis} >1st</button>
-          <button name='line2' onClick={handleVis} >2nd</button>
-          <button name='line3' onClick={handleVis} >3rd</button>
-          <button name='line4' onClick={handleVis} >4th</button>
-          <button name='toggle-highlight' onClick={handleToggle} >{otherLines.text} </button>
+          <span name='line1' onClick={handleVis} className={`${checkbox['line1']} checkFont`} /><div name='line1' onClick={handleVis} ><span className='redLineThick' /> </div>
+          <span name='line2' onClick={handleVis} className={`${checkbox['line2']} checkFont`} /><div name='line2' onClick={handleVis}><span className='redLineThin' /> </div>
+          <span name='line3' onClick={handleVis} className={`${checkbox['line3']} checkFont`} /><div name='line3' onClick={handleVis}><span className='yellowLineThick' /> </div>
+          <span name='line4' onClick={handleVis} className={`${checkbox['line4']} checkFont`} /><div name='line4' onClick={handleVis}><span className='yellowLineThin' /> </div>
+          <span name='toggle-highlight' onClick={handleToggle} className={`${otherLines.text} checkFont`} /><label onClick={handleToggle} >Hover to highlight</label>
         </div>
-        <button id='reset' onClick={reset} >Reset </button>
-        <button id='clearLine' onClick={clearLine} >{lineDisplay.text}</button>
+        <button id='reset' onClick={reset} > <span className='fas fa-power-off'></span> Reset </button>
+        <button id='clearLine' onClick={clearLine} ><span className={lineDisplay.fa}></span> {lineDisplay.text}</button>
       </div>
     </div>
   )
