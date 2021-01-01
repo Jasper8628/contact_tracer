@@ -16,13 +16,13 @@
 .container{
   padding:5%;
   position: absolute;
-  left:50%;
+  left:60%;
   top:50%;
   width: 60vw;
   height: 60vh;
   transform: translate(-50%,-50%) ;
   /* background: rgba(7, 233, 7, 0.808); */
-  background: rgb(7, 7, 7);
+  /* background: rgb(7, 7, 7); */
   border-radius: 20px;
 }
 @keyframes fadeInYellow{

@@ -9,6 +9,7 @@ svg{
   pointer-events: none;
   z-index: 5;
 }
+
 line{
   stroke-dasharray: 2500;
   stroke-dashoffset: 2500;

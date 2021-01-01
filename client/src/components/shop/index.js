@@ -47,13 +47,13 @@ function Index() {
     for (let i = 0; i < 2000; i++) {
       const num = '0' + (500000000 + i);
       const x = Math.random() * 65 + 2
-      const y = Math.random() * 65 + 5
+      const y = Math.random() * 65 + 2
       people.push({ x, y, num })
     }
     for (let i = 0; i < 100; i++) {
       const num = '0' + (900000000 + i);
       const x = Math.random() * 65 + 2
-      const y = Math.random() * 65 + 5
+      const y = Math.random() * 65 + 2
       shopArr.push({ x, y, num, icon: genRandom(icons) })
     }
     setShop(shopArr)
@@ -80,6 +80,77 @@ function Index() {
     if (document.getElementById(id).classList.length > 1) {
       return true
     } else { return false }
+  }
+  const handleTag = (res, name) => {
+    const arr = res.data.closeContacts
+    const arr2 = res.data.secondContacts
+    const primeContact = res.data.primaryContacts;
+    const finalContact = res.data.finalContacts;
+    const color = colors
+    const shopCol = shopColor
+    const lineZero = zero;
+    const lineClose = closeContacts;
+    const lineShop = secondShops;
+    const lineSecond = secondContacts;
+    const tempCustomerArr = [];
+    const tempShopArr = []
+    primeContact.forEach((element) => {
+      tempShopArr.push(element.phoneNumber)
+      const [x0, y0] = genXY(element.phoneNumber)
+      element.customersToTag.forEach((customer) => {
+        const [x1, y1] = genXY(customer)
+        if (customer === name) {
+          lineZero.push({ x0: x1, y0: y1, x1: x0, y1: y0, start: customer, end: element.phoneNumber })
+          setZero(lineZero);
+        } else {
+          lineClose.push({ x0, y0, x1, y1, start: element.phoneNumber, end: customer })
+          tempCustomerArr.push(customer)
+          setClose(lineClose)
+        }
+      })
+      if (shopCol[element.phoneNumber] === shopYellow) {
+        shopCol[element.phoneNumber] = shopYR;
+      } else {
+        shopCol[element.phoneNumber] = shopRed;
+      }
+    });
+    finalContact.forEach((element) => {
+      const shopNum = element.phoneNumber
+      const [x0, y0] = genXY(shopNum)
+      element.customersToTag.forEach((customer) => {
+        const [x1, y1] = genXY(customer)
+        if (tempCustomerArr.indexOf(customer) !== -1) {
+          if (tempShopArr.indexOf(shopNum) === -1) {
+            lineShop.push({ x0: x1, y0: y1, x1: x0, y1: y0, start: customer, end: element.phoneNumber })
+            setSecShop(lineShop);
+          }
+        } else if (customer !== name) {
+          lineSecond.push({ x0, y0, x1, y1, start: element.phoneNumber, end: customer })
+          setSecCont(lineSecond)
+        }
+      })
+      if (shopCol[element.phoneNumber] !== shopRed && shopCol[element.phoneNumber] !== shopYR) {
+        shopCol[element.phoneNumber] = shopYellow
+      }
+    });
+    if (arr.length) {
+      arr.forEach(element => {
+        if (element === name) {
+          color[element] = primary
+        } else if (color[element] !== primary) {
+          if (color[element] === yellow) {
+            color[element] = yToR
+          } else { color[element] = red }
+        }
+      });
+      arr2.forEach(element => {
+        if (color[element] !== red && color[element] !== primary && color[element] !== yToR) {
+          color[element] = yellow
+        }
+      });
+    } else { color[name] = primary }
+    setShopColor(shopCol)
+    setColor(color)
   }
 
   const handleClick = (e) => {
@@ -111,77 +182,7 @@ function Index() {
       numdays: 14
     }
     axios.post('/api', data)
-      .then(res => {
-        const arr = res.data.closeContacts
-        const arr2 = res.data.secondContacts
-        const primeContact = res.data.primaryContacts;
-        const finalContact = res.data.finalContacts;
-        const color = colors
-        const shopCol = shopColor
-        const lineZero = zero;
-        const lineClose = closeContacts;
-        const lineShop = secondShops;
-        const lineSecond = secondContacts;
-        const tempCustomerArr = [];
-        const tempShopArr = []
-        primeContact.forEach((element) => {
-          tempShopArr.push(element.phoneNumber)
-          const [x0, y0] = genXY(element.phoneNumber)
-          element.customersToTag.forEach((customer) => {
-            const [x1, y1] = genXY(customer)
-            if (customer === name) {
-              lineZero.push({ x0: x1, y0: y1, x1: x0, y1: y0, start: customer, end: element.phoneNumber })
-              setZero(lineZero);
-            } else {
-              lineClose.push({ x0, y0, x1, y1, start: element.phoneNumber, end: customer })
-              tempCustomerArr.push(customer)
-              setClose(lineClose)
-            }
-          })
-          if (shopCol[element.phoneNumber] === shopYellow) {
-            shopCol[element.phoneNumber] = shopYR;
-          } else {
-            shopCol[element.phoneNumber] = shopRed;
-          }
-        });
-        finalContact.forEach((element) => {
-          const shopNum = element.phoneNumber
-          const [x0, y0] = genXY(shopNum)
-          element.customersToTag.forEach((customer) => {
-            const [x1, y1] = genXY(customer)
-            if (tempCustomerArr.indexOf(customer) !== -1) {
-              if (tempShopArr.indexOf(shopNum) === -1) {
-                lineShop.push({ x0: x1, y0: y1, x1: x0, y1: y0, start: customer, end: element.phoneNumber })
-                setSecShop(lineShop);
-              }
-            } else if (customer !== name) {
-              lineSecond.push({ x0, y0, x1, y1, start: element.phoneNumber, end: customer })
-              setSecCont(lineSecond)
-            }
-          })
-          if (shopCol[element.phoneNumber] !== shopRed && shopCol[element.phoneNumber] !== shopYR) {
-            shopCol[element.phoneNumber] = shopYellow
-          }
-        });
-        if (arr.length) {
-          arr.forEach(element => {
-            if (element === name) {
-              color[element] = primary
-            } else if (color[element] !== primary) {
-              if (color[element] === yellow) {
-                color[element] = yToR
-              } else { color[element] = red }
-            }
-          });
-          arr2.forEach(element => {
-            if (color[element] !== red && color[element] !== primary && color[element] !== yToR) {
-              color[element] = yellow
-            }
-          });
-        } else { color[name] = primary }
-        setShopColor(shopCol)
-        setColor(color)
-      })
+      .then(res => handleTag(res, name))
   }
   const handleHover = (e) => {
     const name = e.target.getAttribute('name');
@@ -249,7 +250,6 @@ function Index() {
       <SvgLine lineArr={secondShops} lineDisplay={lineDisplay} otherLines={otherLines.line3} highLight={highLight} />
       <SvgLine lineArr={secondContacts} lineDisplay={lineDisplay} otherLines={otherLines.line4} highLight={highLight} />
       <div className='container' >
-        <HeadBar />
         {positions.map((position, index) => (
           <div key={index}
             className={colors[position.num] || 'normal'}

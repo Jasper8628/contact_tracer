@@ -1,14 +1,18 @@
-
 import './App.css';
 import React from 'react';
+import { ContextProvider } from './utils/global'
 import Shop from './components/shop';
-import Menu from './components/menu';
+import Card from './components/card'
+import HeadBar from './components/headBar'
 function App() {
   return (
-    <div >
-      <h1>Contact Tracer</h1>
-      <Shop />
-    </div>
+    <ContextProvider>
+      <div >
+        <HeadBar />
+        <Card />
+        <Shop />
+      </div>
+    </ContextProvider>
   );
 }
 
