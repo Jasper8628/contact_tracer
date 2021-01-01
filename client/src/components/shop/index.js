@@ -1,7 +1,10 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react';
+import SvgLine from '../svgLines';
+import HeadBar from '../headBar';
 import axios from 'axios';
 import './style.css'
 const red = 'red normal';
+const yToR = 'red normal yToR';
 const yellow = 'yellow normal';
 const primary = 'primary normal'
 const shopRed = 'red shop';
@@ -28,6 +31,9 @@ function Index() {
     text: 'Clear Lines',
     fa: 'fas fa-eye-slash'
   })
+  const [checkbox, setCheckbox] = useState({
+    'line1': 'far fa-dot-circle', 'line2': 'far fa-dot-circle', 'line3': 'far fa-dot-circle', 'line4': 'far fa-dot-circle'
+  })
   const [otherLines, setOtherlins] = useState({
     line1: 'line1', line2: 'line2', line3: 'line3', line4: 'line4', toggle: false, text: 'far fa-circle', currentLines: {}
   })
@@ -35,7 +41,6 @@ function Index() {
   useEffect(() => {
     init()
   }, [])
-
   const init = () => {
     const people = []
     const shopArr = []
@@ -54,11 +59,6 @@ function Index() {
     setShop(shopArr)
     setPosition(people)
   }
-  const genRandom = (array) => {
-    const ranNum = Math.floor(Math.random() * array.length);
-    return array[ranNum]
-  }
-
   const reset = () => {
     setZero([])
     setClose([])
@@ -68,9 +68,18 @@ function Index() {
     setColor({});
     axios.get('/api').then(res => console.log(res));
   }
+  const genRandom = (array) => {
+    const ranNum = Math.floor(Math.random() * array.length);
+    return array[ranNum]
+  }
   const genXY = (id) => {
     const { right, left, top, bottom } = document.getElementById(id).getBoundingClientRect();
     return [(right + left) / 2, (top + bottom) / 2]
+  }
+  const checkNode = (id) => {
+    if (document.getElementById(id).classList.length > 1) {
+      return true
+    } else { return false }
   }
 
   const handleClick = (e) => {
@@ -115,7 +124,6 @@ function Index() {
         const lineSecond = secondContacts;
         const tempCustomerArr = [];
         const tempShopArr = []
-
         primeContact.forEach((element) => {
           tempShopArr.push(element.phoneNumber)
           const [x0, y0] = genXY(element.phoneNumber)
@@ -136,7 +144,6 @@ function Index() {
             shopCol[element.phoneNumber] = shopRed;
           }
         });
-
         finalContact.forEach((element) => {
           const shopNum = element.phoneNumber
           const [x0, y0] = genXY(shopNum)
@@ -161,11 +168,13 @@ function Index() {
             if (element === name) {
               color[element] = primary
             } else if (color[element] !== primary) {
-              color[element] = red
+              if (color[element] === yellow) {
+                color[element] = yToR
+              } else { color[element] = red }
             }
           });
           arr2.forEach(element => {
-            if (color[element] !== red && color[element] !== primary) {
+            if (color[element] !== red && color[element] !== primary && color[element] !== yToR) {
               color[element] = yellow
             }
           });
@@ -173,35 +182,6 @@ function Index() {
         setShopColor(shopCol)
         setColor(color)
       })
-  }
-  const [checkbox, setCheckbox] = useState({ 'line1': 'far fa-dot-circle', 'line2': 'far fa-dot-circle', 'line3': 'far fa-dot-circle', 'line4': 'far fa-dot-circle' })
-  const handleVis = (e) => {
-    const name = e.target.getAttribute('name')
-    if (otherLines[name] === name) {
-      setOtherlins({
-        ...otherLines,
-        [name]: ''
-      })
-      setCheckbox({
-        ...checkbox,
-        [name]: 'far fa-circle'
-      })
-    } else {
-      setOtherlins({
-        ...otherLines,
-        [name]: name
-      })
-      setCheckbox({
-        ...checkbox,
-        [name]: 'far fa-dot-circle'
-      })
-    }
-  }
-  const handleSwitch = () => {
-    setSwitch({
-      status: highlightSwitch.status ? false : true,
-      text: highlightSwitch.text === 'far fa-dot-circle' ? 'far fa-circle' : 'far fa-dot-circle'
-    })
   }
   const handleHover = (e) => {
     const name = e.target.getAttribute('name');
@@ -236,83 +216,40 @@ function Index() {
           text: 'far fa-dot-circle'
         })
       }
-
     }
-  }
-  const handleToggle = () => {
-    if (!otherLines.toggle) {
-      setOtherlins({
-        ...otherLines,
-        toggle: true,
-        text: 'far fa-dot-circle'
-      })
-    } else {
-      setOtherlins({
-        ...otherLines,
-        toggle: false,
-        text: 'far fa-circle'
-      })
-    }
-  }
-  const checkNode = (id) => {
-    if (document.getElementById(id).classList.length > 1) {
-      return true
-    } else { return false }
   }
   const clearLine = () => {
-    if (lineDisplay.display !== 'none') {
-      setLineDisplay({
-        display: 'none',
-        text: 'Show Lines',
-        fa: 'fas fa-eye'
-      })
-    } else {
-      setLineDisplay({
-        display: 'block',
-        text: 'Clear Lines',
-        fa: 'fas fa-eye-slash'
-      })
-    }
+    setLineDisplay({
+      display: lineDisplay.display !== 'none' ? 'none' : 'block',
+      text: lineDisplay.text !== 'Show Lines' ? 'Show Lines' : 'Clear Lines',
+      fa: lineDisplay.fa !== 'fas fa-eye' ? 'fas fa-eye' : 'fas fa-eye-slash'
+    })
+  }
+  const handleVis = (e) => {
+    const name = e.target.getAttribute('name')
+    setOtherlins({
+      ...otherLines,
+      [name]: otherLines[name] === name ? '' : name
+    })
+    setCheckbox({
+      ...checkbox,
+      [name]: checkbox[name] === 'far fa-circle' ? 'far fa-dot-circle' : 'far fa-circle'
+    })
+  }
+  const handleSwitch = () => {
+    setSwitch({
+      status: highlightSwitch.status ? false : true,
+      text: highlightSwitch.text === 'far fa-dot-circle' ? 'far fa-circle' : 'far fa-dot-circle'
+    })
   }
   return (
     <div>
-      <svg style={{ display: `${lineDisplay.display}` }}>
-        {zero.map((line, index) => (
-          <line className={`${otherLines.line1} ${highLight[line.start]} ${highLight[line.end]}end`}
-            key={index} x1={line.x0} y1={line.y0} x2={line.x1} y2={line.y1} />
-        ))}
-      </svg>
-      <svg style={{ display: `${lineDisplay.display}` }}>
-        {closeContacts.map((line, index) => (
-          <line className={`${otherLines.line2} ${highLight[line.start]} ${highLight[line.end]}end`}
-            key={index} x1={line.x0} y1={line.y0} x2={line.x1} y2={line.y1} />
-        ))}
-      </svg>
-      <svg style={{ display: `${lineDisplay.display}` }}>
-        {secondShops.map((line, index) => (
-          <line className={`${otherLines.line3} ${highLight[line.start]} ${highLight[line.end]}end`}
-            key={index} x1={line.x0} y1={line.y0} x2={line.x1} y2={line.y1} />
-        ))}
-      </svg>
-      <svg style={{ display: `${lineDisplay.display}` }}>
-        {secondContacts.map((line, index) => (
-          <line className={`${otherLines.line4} ${highLight[line.start]} ${highLight[line.end]}end`}
-            key={index} x1={line.x0} y1={line.y0} x2={line.x1} y2={line.y1} />
-        ))}</svg>
+      <SvgLine lineArr={zero} lineDisplay={lineDisplay} otherLines={otherLines.line1} highLight={highLight} />
+      <SvgLine lineArr={closeContacts} lineDisplay={lineDisplay} otherLines={otherLines.line2} highLight={highLight} />
+      <SvgLine lineArr={secondShops} lineDisplay={lineDisplay} otherLines={otherLines.line3} highLight={highLight} />
+      <SvgLine lineArr={secondContacts} lineDisplay={lineDisplay} otherLines={otherLines.line4} highLight={highLight} />
       <div className='container' >
-        <div className='headBar'>
-          <h3>Trace someone by phone number: </h3>
-          <p>0440-00-</p>
-          <input id='tagInput' placeholder='number 1 - 2000...' />
-          <select>
-            <option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option>
-            <option>10</option><option>11</option><option>12</option><option>13</option><option>14</option>
-          </select>
-          <p>days since exposure</p>
-          <button id='tag'><span className='fas fa-search'></span> </button>
-          <h3>or </h3>
-          <button id='random' ><span className='fas fa-random'></span> Random</button>
-        </div>
+        <HeadBar />
         {positions.map((position, index) => (
           <div key={index}
             className={colors[position.num] || 'normal'}

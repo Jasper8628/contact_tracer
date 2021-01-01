@@ -1,0 +1,126 @@
+
+svg{
+  position: fixed;
+  left:50%;
+  top:50%;
+  width: 100vw;
+  height: 100vh;
+  transform: translate(-50%,-50%) ;
+  pointer-events: none;
+  z-index: 5;
+}
+line{
+  stroke-dasharray: 2500;
+  stroke-dashoffset: 2500;
+  animation: grow 3s linear forwards;
+  animation-timing-function:ease-in-out
+}
+.line1{
+  stroke: rgb(255,0,0,0.6);
+  stroke-width: 3px;
+  transition:ease-in-out 1s;
+}
+.line2{
+  stroke: rgb(255,0,0,0.6);
+  stroke-width: 3px ;
+  animation-delay: 2s;
+  transition:ease-in-out 1s;
+}
+.line3{
+  stroke: rgb(255,255,0,0.4);
+  stroke-width:3px;
+  animation-delay: 4s;
+  transition:ease-in-out 1s;
+}
+.line4{
+  stroke: rgb(255,255,0,0.5);
+  stroke-width: 1px; 
+  animation-delay: 6s;
+  transition:ease-in-out 1s;
+}
+.line1dim{
+  stroke: rgb(255,0,0,0.1);
+  stroke-width: 3px;
+  transition:ease-in-out 0.8s;
+}
+.line2dim{
+  stroke: rgb(255,0,0,0.1);
+  stroke-width: 3px ;
+  animation-delay: 2s;
+  transition:ease-in-out 0.8s;
+}
+.line3dim{
+  stroke: rgb(255,255,0,0.1);
+  stroke-width:3px;
+  animation-delay: 4s;
+  transition:ease-in-out 0.8s;
+}
+.line4dim{
+  stroke: rgb(255,255,0,0.1);
+  stroke-width: 1px; 
+  animation-delay: 6s;
+  transition:ease-in-out 0.8s;
+}
+.highLight{
+  stroke: rgba(255, 255, 255, 0.9);
+  stroke-width: 2px; 
+  opacity: 1;
+}
+.highLightend{
+  stroke: rgba(255, 255, 255, 0.9);
+  stroke-width: 3px; 
+  opacity: 1;
+}
+@keyframes grow {
+  to{
+    stroke-dashoffset: 0;
+  }
+}
+.redLineThick{
+  pointer-events: none;
+  /* border-radius:2px; */
+  display: inline-flex;
+  height: 3px;
+  width: 2vw;
+  background: rgba(255, 0, 0, 0.651);
+  border:none;
+  margin-bottom:0.3vh;
+  margin-left: 5px;
+  margin-right: 1vw;
+}
+.redLineThin{
+  pointer-events: none;
+  /* border-radius:2px; */
+  display: inline-flex;
+  height: 1px;
+  width: 2vw;
+  background: rgba(255, 0, 0, 0.657);
+  border:none;
+  margin-bottom:0.4vh;
+  margin-left: 5px;
+  margin-right: 1vw;
+}
+.yellowLineThick{
+  pointer-events: none;
+  /* border-radius:2px; */
+  display: inline-flex;
+  height: 3px;
+  width: 2vw;
+  background: rgba(255, 255, 0, 0.609);
+  border:none;
+  margin-bottom:0.3vh;
+  margin-left: 5px;
+  margin-right: 1vw;
+}
+.yellowLineThin{
+  pointer-events: none;
+  /* border-radius:2px; */
+  display: inline-flex;
+  height: 1px;
+  width: 2vw;
+  background: rgba(255, 255, 0, 0.609);
+  border:none;
+  margin-bottom:0.4vh;
+  margin-left: 5px;
+  margin-right: 1vw;
+}

@@ -1,0 +1,62 @@
+
+.headBar{
+  position: absolute;
+  top:1%;
+  left:2vw;
+  display: flexbox;
+  width: 50vw;
+  height: 2vh;
+  align-items: center;
+  /* border: rgba(17, 186, 238, 0.915) solid 1px; */
+}
+.headBar select{
+  margin: 10px;
+}
+.headBar p{
+  display: inline;
+  color: rgba(255, 255, 255, 0.705);
+  margin-right: 5px;
+}
+.headBar h3{
+  display: inline;
+  color: rgba(255, 255, 255, 0.705);
+  margin-right: 2%;
+}
+.headBar input{
+  height: 2vh;
+  padding-left: 15px;
+  color: white;
+  background: rgb(17, 17, 17);
+  border: none;
+  outline: none;
+  border-radius: 10px;
+  margin-right: 10px;
+}
+#tag{
+  width: 3vw;
+  height: 3vh;
+  font-size: 0.75vw;
+  /* border: rgba(17, 186, 238, 0.915) solid 2px; */
+  /* border-radius: 50%; */
+  border: none;
+  color: rgba(17, 186, 238, 0.915);
+  outline: none;
+  cursor: pointer;
+  border-radius: 50px;
+  background: transparent;
+  margin-left: -1%;
+}
+#random{
+  font-size: 1em;
+  font-weight:500 ;
+  /* width: 5em; */
+  height: 2em;
+  color: rgba(17, 186, 238, 0.915);
+  /* border: rgba(17, 186, 238, 0.915) solid 2px; */
+  border: none;
+  border-radius: 50%;
+  outline: none;
+  cursor: pointer;
+  border-radius: 50px;
+  background: transparent;
+}
