@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import SvgLine from '../svgLines';
 import HeadBar from '../headBar';
 import axios from 'axios';
+import handleTag from '../../utils/tag';
 import './style.css'
 const red = 'red normal';
 const yToR = 'red normal yToR';
@@ -72,117 +73,32 @@ function Index() {
     const ranNum = Math.floor(Math.random() * array.length);
     return array[ranNum]
   }
-  const genXY = (id) => {
-    const { right, left, top, bottom } = document.getElementById(id).getBoundingClientRect();
-    return [(right + left) / 2, (top + bottom) / 2]
-  }
   const checkNode = (id) => {
     if (document.getElementById(id).classList.length > 1) {
       return true
     } else { return false }
   }
-  const handleTag = (res, name) => {
-    const arr = res.data.closeContacts
-    const arr2 = res.data.secondContacts
-    const primeContact = res.data.primaryContacts;
-    const finalContact = res.data.finalContacts;
-    const color = colors
-    const shopCol = shopColor
-    const lineZero = zero;
-    const lineClose = closeContacts;
-    const lineShop = secondShops;
-    const lineSecond = secondContacts;
-    const tempCustomerArr = [];
-    const tempShopArr = []
-    primeContact.forEach((element) => {
-      tempShopArr.push(element.phoneNumber)
-      const [x0, y0] = genXY(element.phoneNumber)
-      element.customersToTag.forEach((customer) => {
-        const [x1, y1] = genXY(customer)
-        if (customer === name) {
-          lineZero.push({ x0: x1, y0: y1, x1: x0, y1: y0, start: customer, end: element.phoneNumber })
-          setZero(lineZero);
-        } else {
-          lineClose.push({ x0, y0, x1, y1, start: element.phoneNumber, end: customer })
-          tempCustomerArr.push(customer)
-          setClose(lineClose)
-        }
-      })
-      if (shopCol[element.phoneNumber] === shopYellow) {
-        shopCol[element.phoneNumber] = shopYR;
-      } else {
-        shopCol[element.phoneNumber] = shopRed;
-      }
-    });
-    finalContact.forEach((element) => {
-      const shopNum = element.phoneNumber
-      const [x0, y0] = genXY(shopNum)
-      element.customersToTag.forEach((customer) => {
-        const [x1, y1] = genXY(customer)
-        if (tempCustomerArr.indexOf(customer) !== -1) {
-          if (tempShopArr.indexOf(shopNum) === -1) {
-            lineShop.push({ x0: x1, y0: y1, x1: x0, y1: y0, start: customer, end: element.phoneNumber })
-            setSecShop(lineShop);
-          }
-        } else if (customer !== name) {
-          lineSecond.push({ x0, y0, x1, y1, start: element.phoneNumber, end: customer })
-          setSecCont(lineSecond)
-        }
-      })
-      if (shopCol[element.phoneNumber] !== shopRed && shopCol[element.phoneNumber] !== shopYR) {
-        shopCol[element.phoneNumber] = shopYellow
-      }
-    });
-    if (arr.length) {
-      arr.forEach(element => {
-        if (element === name) {
-          color[element] = primary
-        } else if (color[element] !== primary) {
-          if (color[element] === yellow) {
-            color[element] = yToR
-          } else { color[element] = red }
-        }
-      });
-      arr2.forEach(element => {
-        if (color[element] !== red && color[element] !== primary && color[element] !== yToR) {
-          color[element] = yellow
-        }
-      });
-    } else { color[name] = primary }
-    setShopColor(shopCol)
-    setColor(color)
-  }
-
   const handleClick = (e) => {
     const name = e.target.getAttribute('name');
     if (checkNode(name)) {
       const lineArr = highLight;
       lineArr[name] = ''
-      // axios.post('/api/info', name)
-      // .then(res=>{
-      //   console.log('res')
-      // })
     }
     setOtherlins({
-      line1: 'line1',
-      line2: 'line2',
-      line3: 'line3',
-      line4: 'line4',
-      toggle: false,
-      text: 'far fa-circle',
-      currentLines: {}
+      line1: 'line1', line2: 'line2', line3: 'line3', line4: 'line4',
+      toggle: false, text: 'far fa-circle', currentLines: {}
     })
-
-    setColor({
-      ...colors,
-      [name]: primary
-    })
+    setColor({ ...colors, [name]: primary })
     const data = {
       phoneNumber: name,
       numdays: 14
     }
     axios.post('/api', data)
-      .then(res => handleTag(res, name))
+      .then(res => handleTag(res, name,
+        colors, setColor, shopColor, setShopColor,
+        zero, setZero, closeContacts, setClose,
+        secondShops, setSecShop, secondContacts, setSecCont)
+      )
   }
   const handleHover = (e) => {
     const name = e.target.getAttribute('name');
@@ -267,9 +183,8 @@ function Index() {
             style={{ top: `${shop.y}vh`, left: `${shop.x}vw` }}
             name={shop.num}
             onMouseOver={handleHover}
-            onMouseOut={handleLeave}
-          >
-            <span name={shop.num} className={shop.icon}> </span>
+            onMouseOut={handleLeave}>
+            <span name={shop.num} className={shop.icon} />
           </div>
         ))}
         <div className='buttonContainer'>

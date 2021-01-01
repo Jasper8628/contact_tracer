@@ -1,5 +1,3 @@
-import React from 'react';
-import { useNewContext } from './global';
 const red = 'red normal';
 const yToR = 'red normal yToR';
 const yellow = 'yellow normal';
@@ -11,18 +9,19 @@ const genXY = (id) => {
   const { right, left, top, bottom } = document.getElementById(id).getBoundingClientRect();
   return [(right + left) / 2, (top + bottom) / 2]
 }
-const HandleTag = (res, name) => {
-  const [global, dispatch] = useNewContext();
+const handleTag = (res, name, colors, setColor,
+  shopColor, setShopColor, zero, setZero, closeContacts, setClose,
+  secondShops, setSecShop, secondContacts, setSecCont) => {
   const arr = res.data.closeContacts
   const arr2 = res.data.secondContacts
   const primeContact = res.data.primaryContacts;
   const finalContact = res.data.finalContacts;
-  const color = global.colors
-  const shopCol = global.shopColor
-  const lineZero = global.zero;
-  const lineClose = global.closeContacts;
-  const lineShop = global.secondShops;
-  const lineSecond = global.secondContacts;
+  const color = colors
+  const shopCol = shopColor
+  const lineZero = zero;
+  const lineClose = closeContacts;
+  const lineShop = secondShops;
+  const lineSecond = secondContacts;
   const tempCustomerArr = [];
   const tempShopArr = []
   primeContact.forEach((element) => {
@@ -32,15 +31,11 @@ const HandleTag = (res, name) => {
       const [x1, y1] = genXY(customer)
       if (customer === name) {
         lineZero.push({ x0: x1, y0: y1, x1: x0, y1: y0, start: customer, end: element.phoneNumber })
-        dispatch({
-          type: 'zero', lineZero
-        });
+        setZero(lineZero);
       } else {
         lineClose.push({ x0, y0, x1, y1, start: element.phoneNumber, end: customer })
         tempCustomerArr.push(customer)
-        dispatch({
-          type: 'lineClose', lineClose
-        })
+        setClose(lineClose)
       }
     })
     if (shopCol[element.phoneNumber] === shopYellow) {
@@ -57,15 +52,11 @@ const HandleTag = (res, name) => {
       if (tempCustomerArr.indexOf(customer) !== -1) {
         if (tempShopArr.indexOf(shopNum) === -1) {
           lineShop.push({ x0: x1, y0: y1, x1: x0, y1: y0, start: customer, end: element.phoneNumber })
-          dispatch({
-            type: 'secShop', lineShop
-          })
+          setSecShop(lineShop);
         }
       } else if (customer !== name) {
         lineSecond.push({ x0, y0, x1, y1, start: element.phoneNumber, end: customer })
-        dispatch({
-          type: 'secContact', lineSecond
-        })
+        setSecCont(lineSecond)
       }
     })
     if (shopCol[element.phoneNumber] !== shopRed && shopCol[element.phoneNumber] !== shopYR) {
@@ -88,8 +79,7 @@ const HandleTag = (res, name) => {
       }
     });
   } else { color[name] = primary }
-  dispatch({
-    type: 'set', shopCol, color
-  })
+  setShopColor(shopCol)
+  setColor(color)
 }
-export default HandleTag
+export default handleTag
