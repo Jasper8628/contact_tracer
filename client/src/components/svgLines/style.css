@@ -65,12 +65,14 @@ line{
 .highLight{
   stroke: rgba(255, 255, 255, 0.9);
   stroke-width: 2px; 
-  opacity: 1;
+  /* opacity: 1; */
+  transition:ease-in-out 0.5s;
 }
 .highLightend{
   stroke: rgba(255, 255, 255, 0.9);
   stroke-width: 3px; 
-  opacity: 1;
+  /* opacity: 1; */
+  transition:ease-in-out 0.5s;
 }
 @keyframes grow {
   to{

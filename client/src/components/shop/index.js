@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import SvgLine from '../svgLines';
+import ToggleGroup from '../toggleGroup';
 import HeadBar from '../headBar';
 import axios from 'axios';
 import handleTag from '../../utils/tag';
@@ -23,6 +24,10 @@ function Index() {
   const [secondShops, setSecShop] = useState([]);
   const [secondContacts, setSecCont] = useState([]);
   const [highLight, setHighLight] = useState({})
+  const [input, setInput] = useState({
+    name: '0500000000',
+    days: 14
+  })
   const [highlightSwitch, setSwitch] = useState({
     status: true,
     text: 'far fa-dot-circle'
@@ -45,16 +50,16 @@ function Index() {
   const init = () => {
     const people = []
     const shopArr = []
-    for (let i = 0; i < 2000; i++) {
+    for (let i = 0; i < 2001; i++) {
       const num = '0' + (500000000 + i);
       const x = Math.random() * 65 + 2
-      const y = Math.random() * 65 + 2
+      const y = Math.random() * 65 + 3
       people.push({ x, y, num })
     }
     for (let i = 0; i < 100; i++) {
       const num = '0' + (900000000 + i);
       const x = Math.random() * 65 + 2
-      const y = Math.random() * 65 + 2
+      const y = Math.random() * 65 + 3
       shopArr.push({ x, y, num, icon: genRandom(icons) })
     }
     setShop(shopArr)
@@ -159,12 +164,43 @@ function Index() {
       text: highlightSwitch.text === 'far fa-dot-circle' ? 'far fa-circle' : 'far fa-dot-circle'
     })
   }
+
+  const handleChange = (e) => {
+    const name = e.target.getAttribute('name');
+    let value = e.target.value;
+    if (name === 'name') {
+      value = '0' + (parseInt(value) + 500000000)
+    }
+    setInput({ ...input, [name]: value })
+  }
+  const handleSubmit = (e) => {
+    let name = input.name
+    let days = input.days
+    if (e.target.id === 'random') {
+      const num = '0' + Math.floor(Math.random() * 1999 + 500000000);
+      name = num;
+      days = 14;
+    }
+    setColor({ ...colors, [name]: primary })
+    const data = {
+      phoneNumber: name,
+      numdays: days
+    }
+    console.log(data)
+    axios.post('/api', data)
+      .then(res => handleTag(res, name,
+        colors, setColor, shopColor, setShopColor,
+        zero, setZero, closeContacts, setClose,
+        secondShops, setSecShop, secondContacts, setSecCont)
+      )
+  }
   return (
     <div>
       <SvgLine lineArr={zero} lineDisplay={lineDisplay} otherLines={otherLines.line1} highLight={highLight} />
       <SvgLine lineArr={closeContacts} lineDisplay={lineDisplay} otherLines={otherLines.line2} highLight={highLight} />
       <SvgLine lineArr={secondShops} lineDisplay={lineDisplay} otherLines={otherLines.line3} highLight={highLight} />
       <SvgLine lineArr={secondContacts} lineDisplay={lineDisplay} otherLines={otherLines.line4} highLight={highLight} />
+      <HeadBar handleChange={handleChange} handleSubmit={handleSubmit} input={input} />
       <div className='container' >
         {positions.map((position, index) => (
           <div key={index}
@@ -187,15 +223,14 @@ function Index() {
             <span name={shop.num} className={shop.icon} />
           </div>
         ))}
-        <div className='buttonContainer'>
-          <span name='line1' onClick={handleVis} className={`${checkbox['line1']} checkFont`} /><div name='line1' onClick={handleVis} ><span className='redLineThick' /> </div>
-          <span name='line2' onClick={handleVis} className={`${checkbox['line2']} checkFont`} /><div name='line2' onClick={handleVis}><span className='redLineThin' /> </div>
-          <span name='line3' onClick={handleVis} className={`${checkbox['line3']} checkFont`} /><div name='line3' onClick={handleVis}><span className='yellowLineThick' /> </div>
-          <span name='line4' onClick={handleVis} className={`${checkbox['line4']} checkFont`} /><div name='line4' onClick={handleVis}><span className='yellowLineThin' /> </div>
-          <span name='toggle-highlight' onClick={handleSwitch} className={`${highlightSwitch.text} checkFont`} /><label onClick={handleSwitch} >Hover highlighting</label>
-        </div>
-        <button id='reset' onClick={reset} > <span className='fas fa-power-off'></span> Reset </button>
-        <button id='clearLine' onClick={clearLine} ><span className={lineDisplay.fa}></span> {lineDisplay.text}</button>
+        <ToggleGroup
+          handleVis={handleVis}
+          checkbox={checkbox}
+          highlightSwitch={highlightSwitch}
+          handleSwitch={handleSwitch}
+          clearLine={clearLine}
+          lineDisplay={lineDisplay}
+          reset={reset} />
       </div>
     </div>
   )

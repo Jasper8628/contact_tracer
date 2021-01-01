@@ -1,0 +1,60 @@
+
+.buttonContainer{
+  width: 100%;
+  position: absolute;
+  display: flex;
+  /* height: 2vh; */
+  bottom: 4vh;
+  left: 2vw;
+  padding-bottom: 5px;
+  margin-bottom: 5px;
+}
+.buttonContainer button{
+  display: flex;
+  margin-right: 1vw;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.644);
+  outline: none;
+  cursor: pointer;
+  border: none;
+  border-radius: 50px;
+  align-items: center;
+}
+.lineLeg{
+  margin-top: 5%;
+}
+
+.buttonContainer button span{
+  pointer-events: none;
+  color: rgba(17, 186, 238, 0.915);
+  /* color: rgba(255, 255, 255, 0.507); */
+  margin-right: 5px;
+}
+#reset{
+  cursor: pointer;
+  position: absolute;
+  right: 4vw;
+  margin: 5px;
+  border: none;
+  background: transparent;
+  /* color: rgba(17, 186, 238, 0.915); */
+  color: rgba(255, 255, 255, 0.644);
+  outline: none;
+}
+#reset span{
+  color: rgba(17, 186, 238, 0.915);
+}
+#clearLine{
+  cursor: pointer;
+  position: absolute;
+  right: 8vw;
+  margin: 5px;
+  border: none;
+  background: transparent;
+  /* color: rgba(17, 186, 238, 0.915); */
+  color: rgba(255, 255, 255, 0.637);
+  outline: none;
+}
+#clearLine span{
+  color: rgba(17, 186, 238, 0.915);  
+}

@@ -23,7 +23,22 @@
   font-size: 30px;
 }
 .headBar select{
+  text-align: center;
   margin: 10px;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.678);
+  height: 2vh;
+  width: 2vw;
+  border-radius: 5px;
+  outline: none;
+  border: rgba(255, 255, 255, 0.671) solid 1px;
+}
+.headBar select option{
+  background: rgb(22, 22, 22);
+  color: rgba(255, 255, 255, 0.685);
+  border: none;
+  outline: none;
+  border-radius: 5px;
 }
 .headBar p{
   display: inline;
@@ -49,23 +64,24 @@
 #search{
   width: 3vw;
   height: 3vh;
-  font-size: 0.75vw;
+  font-size: 1.5em;
   /* border: rgba(17, 186, 238, 0.915) solid 2px; */
   /* border-radius: 50%; */
   border: none;
   color: rgba(17, 186, 238, 0.915);
+  /* color:rgba(218, 231, 41, 0.835); */
   outline: none;
   cursor: pointer;
   border-radius: 50px;
   background: transparent;
-  margin-left: -1%;
+  margin-left: -0.7vw;
 }
 #tag{
   font-size: 1em;
   font-weight:500 ;
   /* width: 5em; */
   height: 2em;
-  color: rgba(17, 186, 238, 0.915);
+  color:rgba(255, 251, 0, 0.911);
   /* border: rgba(17, 186, 238, 0.915) solid 2px; */
   border: none;
   border-radius: 50%;
@@ -78,11 +94,11 @@
 }
 #random{
   font-size: 1em;
-  font-weight:500 ;
+  font-weight:600 ;
   /* width: 5em; */
   height: 2em;
+  /* color:rgba(255, 251, 0, 0.911); */
   color: rgba(17, 186, 238, 0.915);
-  /* border: rgba(17, 186, 238, 0.915) solid 2px; */
   border: none;
   border-radius: 50%;
   outline: none;

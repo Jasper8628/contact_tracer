@@ -8,7 +8,7 @@ function App() {
   return (
     <ContextProvider>
       <div >
-        <HeadBar />
+        {/* <HeadBar /> */}
         <Card />
         <Shop />
       </div>
