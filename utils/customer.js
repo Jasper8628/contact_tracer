@@ -14,13 +14,19 @@ const visits = 7
 const offset = Math.ceil(visits / 2);
 const firstNames = require('./firstName');
 const lastNames = require('./lastName');
+const shopNames = require('./shopNames')
 for (let i = 0; i < 12; i++) {
   gap.push(5 * i)
 }
-const search = async (num) => {
+const search = async (num, shopType) => {
   let item = {}
-  shops.forEach(shop => {
+  shops.forEach((shop, index) => {
     if (shop.phoneNumber === num) {
+      let shopName = '';
+      if (shopType !== 'grocery' && shopType !== 'busStop') {
+        shopName = `${genRandom(lastNames)}'s ${genRandom(shopNames[shopType])}`
+      } else { shopName = `${genRandom(shopNames[shopType])}` }
+      if (!shops[index].name) { shops[index].name = shopName }
       const keys = Object.keys(shop)
       const dates = [];
       keys.forEach(key => {
@@ -43,7 +49,7 @@ const search = async (num) => {
       })
       item = {
         phoneNumber: shop.phoneNumber,
-        shopName: shop.shopName,
+        name: shops[index].name,
         status: '',
         dates: dates,
         type: 'shop'

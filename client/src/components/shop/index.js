@@ -7,6 +7,7 @@ import axios from 'axios';
 import handleTag from '../../utils/tag';
 import './style.css'
 import { useNewContext } from '../../utils/global';
+import icons from './icons';
 const red = 'red normal';
 const yToR = 'red normal yToR';
 const yellow = 'yellow normal';
@@ -15,8 +16,6 @@ const shopRed = 'red shop';
 const shopYR = 'red shop yToR';
 const shopYellow = 'yellow shop'
 let timeOut;
-const icons = ['fas fa-utensils', 'fas fa-cocktail', 'fas fa-coffee', 'fas fa-shopping-cart', 'fas fa-swimmer', 'fas fa-bus-alt', 'far fa-building', 'fas fa-stethoscope']
-
 function Index() {
   const [global, dispatch] = useNewContext();
   const [positions, setPosition] = useState([]);
@@ -65,7 +64,8 @@ function Index() {
       const num = '0' + (900000000 + i);
       const x = Math.random() * 65 + 2
       const y = Math.random() * 65 + 3
-      shopArr.push({ x, y, num, icon: genRandom(icons) })
+      const icon = genRandom(icons)
+      shopArr.push({ x, y, num, icon: icon.icon, shopType: icon.name })
     }
     setShop(shopArr)
     setPosition(people)
@@ -90,9 +90,9 @@ function Index() {
   }
   const handleClick = (e) => {
     clearTimeout(timeOut);
-
     const name = e.target.getAttribute('name');
-
+    const shop = shops.find(shop => shop.num === name)
+    const shopType = shop ? shop.shopType : ''
     if (checkNode(name)) {
       const lineArr = highLight;
       lineArr[name] = ''
@@ -113,7 +113,7 @@ function Index() {
         secondShops, setSecShop, secondContacts, setSecCont)
       )
       .then(() => {
-        axios.post('/api/info', { name })
+        axios.post('/api/info', { name, shopType })
           .then(result => {
             dispatch({
               type: 'info',
@@ -137,8 +137,11 @@ function Index() {
   const handleHover = (e) => {
     const name = e.target.getAttribute('name');
     if (highlightSwitch.status && otherLines.toggle && checkNode(name)) {
+      const shop = shops.find(shop => shop.num === name)
+      const shopType = shop ? shop.shopType : ''
+      console.log(shopType)
       timeOut = setTimeout(() => {
-        axios.post('/api/info', { name })
+        axios.post('/api/info', { name, shopType })
           .then(res => {
             dispatch({
               type: 'info',

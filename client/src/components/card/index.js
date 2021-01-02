@@ -7,27 +7,6 @@ function Index() {
     const keys = Object.keys(global.item)
     console.log(keys)
 
-
-    // keys.forEach(key => {
-    //   if (global.item[key] !== [] && typeof (global.item[key]) !== 'string') {
-    //     const hours = Object.keys(global.item[key])
-    //     const log = []
-    //     hours.forEach(hour => {
-    //       if (global.item[key][hour].length) {
-    //         log.push({
-    //           hour: hour,
-    //           log: global.item[key][hour]
-    //         })
-    //       }
-    //     })
-    //     date.push({
-    //       date: key,
-    //       hours: log
-    //     })
-    //   }
-    //   console.log(date);
-    // })
-    // setDates(date);
   }
   return (
     <div className='card'>

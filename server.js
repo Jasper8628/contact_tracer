@@ -23,8 +23,8 @@ app.get('/api', (req, res) => {
   })
 });
 app.post('/api/info', (req, res) => {
-  const name = req.body.name
-  search(name)
+  const { name, shopType } = req.body
+  search(name, shopType)
     .then(data => {
       const item = JSON.parse(data)
       res.json({
