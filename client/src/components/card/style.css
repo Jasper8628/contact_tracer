@@ -17,6 +17,11 @@
   color: rgba(255, 255, 255, 0.603);
   text-align: start;
 }
+.card h2{
+  color: rgba(255, 255, 255, 0.603);
+  text-align: start;
+
+}
 .card h3{
   text-align: center;
   color: rgba(255, 255, 255, 0.692);

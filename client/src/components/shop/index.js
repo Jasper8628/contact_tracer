@@ -145,9 +145,8 @@ function Index() {
               item: res.data.item
             })
             console.log(res.data)
-
           })
-      }, 500);
+      }, 300);
       const currentLines = otherLines
       setOtherlins({
         ...otherLines,

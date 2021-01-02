@@ -34,7 +34,8 @@ function Index() {
       <div className='cardContainer'>
         <div className='qr'></div>
         <h3>{global.item.status ? global.item.status : ''} </h3>
-        <h1>{global.item.phoneNumber ? global.item.phoneNumber : 'none'}</h1>
+        <h1>{global.item.name ? global.item.name : 'none'}</h1>
+        <h2>{global.item.phoneNumber ? global.item.phoneNumber : 'none'}</h2>
         {global.item.dates.map((date, index) => (
           <details key={index}>
             <summary>{date.date}</summary>

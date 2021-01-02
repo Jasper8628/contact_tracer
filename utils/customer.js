@@ -12,6 +12,8 @@ const numCustomers = 2001;
 const numShops = 100;
 const visits = 7
 const offset = Math.ceil(visits / 2);
+const firstNames = require('./firstName');
+const lastNames = require('./lastName');
 for (let i = 0; i < 12; i++) {
   gap.push(5 * i)
 }
@@ -64,7 +66,8 @@ const search = async (num) => {
       phoneNumber: customer.phoneNumber,
       status: customer.status,
       dates: dates,
-      type: 'customer'
+      type: 'customer',
+      name: customer.name
     }
   }
   return JSON.stringify(item)
@@ -139,11 +142,15 @@ const restart = () => {
   }
   for (let i = 0; i < numCustomers; i++) {
     const num = i + 440000000
+    const firstName = genRandom(firstNames);
+    const lastName = genRandom(lastNames)
     const numStr = '0' + num;
     customers[numStr] = {
       'phoneNumber': numStr,
       'status': 'negative',
-      'type': 'customer'
+      'type': 'customer',
+      'name': `${firstName} ${lastName}`
+
     };
     for (let j = 0; j < 14; j++) {
       generateVisit(j, customers[numStr], visits, offset)
