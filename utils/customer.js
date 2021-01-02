@@ -15,6 +15,60 @@ const offset = Math.ceil(visits / 2);
 for (let i = 0; i < 12; i++) {
   gap.push(5 * i)
 }
+const search = async (num) => {
+  let item = {}
+  shops.forEach(shop => {
+    if (shop.phoneNumber === num) {
+      const keys = Object.keys(shop)
+      const dates = [];
+      keys.forEach(key => {
+        if (shop[key].length !== 0 && typeof (shop[key]) !== 'string') {
+          const hours = Object.keys(shop[key])
+          const log = []
+          hours.forEach(hour => {
+            if (shop[key][hour].length) {
+              log.push({
+                hour: hour,
+                log: shop[key][hour]
+              })
+            }
+          })
+          dates.push({
+            date: key,
+            log: log
+          })
+        }
+      })
+      item = {
+        phoneNumber: shop.phoneNumber,
+        shopName: shop.shopName,
+        status: '',
+        dates: dates,
+        type: 'shop'
+      }
+    }
+  })
+  if (customers[num] !== undefined) {
+    const customer = customers[num]
+    const keys = Object.keys(customer)
+    const dates = [];
+    keys.forEach(key => {
+      if (customer[key].length !== 0 && typeof (customer[key]) !== 'string') {
+        dates.push({
+          date: key,
+          log: customer[key]
+        })
+      }
+    })
+    item = {
+      phoneNumber: customer.phoneNumber,
+      status: customer.status,
+      dates: dates,
+      type: 'customer'
+    }
+  }
+  return JSON.stringify(item)
+}
 const genRandom = (array) => {
   const ranNum = Math.floor(Math.random() * array.length);
   return array[ranNum]
@@ -70,7 +124,8 @@ const restart = () => {
     const num = '0' + (i + 900000000)
     shops.push({
       shopName: 'random shop' + i,
-      'phoneNumber': num
+      'phoneNumber': num,
+      'type': 'shop'
     })
   }
   for (let j = 0; j < 14; j++) {
@@ -83,11 +138,12 @@ const restart = () => {
     })
   }
   for (let i = 0; i < numCustomers; i++) {
-    const num = i + 500000000
+    const num = i + 440000000
     const numStr = '0' + num;
     customers[numStr] = {
       'phoneNumber': numStr,
-      'status': 'negative'
+      'status': 'negative',
+      'type': 'customer'
     };
     for (let j = 0; j < 14; j++) {
       generateVisit(j, customers[numStr], visits, offset)
@@ -165,4 +221,4 @@ const secTag = async (arr, isSecRound) => {
 }
 
 restart()
-module.exports = [tag, secTag, reset, restart];
+module.exports = [tag, secTag, reset, restart, search];

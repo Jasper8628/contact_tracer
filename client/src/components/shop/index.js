@@ -2,9 +2,11 @@ import React, { useEffect, useState } from 'react';
 import SvgLine from '../svgLines';
 import ToggleGroup from '../toggleGroup';
 import HeadBar from '../headBar';
+import Card from '../card';
 import axios from 'axios';
 import handleTag from '../../utils/tag';
 import './style.css'
+import { useNewContext } from '../../utils/global';
 const red = 'red normal';
 const yToR = 'red normal yToR';
 const yellow = 'yellow normal';
@@ -12,9 +14,11 @@ const primary = 'primary normal'
 const shopRed = 'red shop';
 const shopYR = 'red shop yToR';
 const shopYellow = 'yellow shop'
+let timeOut;
 const icons = ['fas fa-utensils', 'fas fa-cocktail', 'fas fa-coffee', 'fas fa-shopping-cart', 'fas fa-swimmer', 'fas fa-bus-alt', 'far fa-building', 'fas fa-stethoscope']
 
 function Index() {
+  const [global, dispatch] = useNewContext();
   const [positions, setPosition] = useState([]);
   const [shops, setShop] = useState([]);
   const [colors, setColor] = useState({});
@@ -24,6 +28,7 @@ function Index() {
   const [secondShops, setSecShop] = useState([]);
   const [secondContacts, setSecCont] = useState([]);
   const [highLight, setHighLight] = useState({})
+  const [profile, setProfile] = useState({})
   const [input, setInput] = useState({
     name: '0500000000',
     days: 14
@@ -51,7 +56,7 @@ function Index() {
     const people = []
     const shopArr = []
     for (let i = 0; i < 2001; i++) {
-      const num = '0' + (500000000 + i);
+      const num = '0' + (440000000 + i);
       const x = Math.random() * 65 + 2
       const y = Math.random() * 65 + 3
       people.push({ x, y, num })
@@ -84,7 +89,10 @@ function Index() {
     } else { return false }
   }
   const handleClick = (e) => {
+    clearTimeout(timeOut);
+
     const name = e.target.getAttribute('name');
+
     if (checkNode(name)) {
       const lineArr = highLight;
       lineArr[name] = ''
@@ -104,10 +112,42 @@ function Index() {
         zero, setZero, closeContacts, setClose,
         secondShops, setSecShop, secondContacts, setSecCont)
       )
+      .then(() => {
+        axios.post('/api/info', { name })
+          .then(result => {
+            dispatch({
+              type: 'info',
+              item: result.data.item
+            })
+            console.log(result.data)
+
+          })
+      })
+  }
+  const clickShop = (e) => {
+    const name = e.target.getAttribute('name');
+    axios.post('/api/info', { name })
+      .then(res => {
+        if (res.data.item.type === 'shop') {
+          console.log(res.data)
+        }
+      })
+
   }
   const handleHover = (e) => {
     const name = e.target.getAttribute('name');
     if (highlightSwitch.status && otherLines.toggle && checkNode(name)) {
+      timeOut = setTimeout(() => {
+        axios.post('/api/info', { name })
+          .then(res => {
+            dispatch({
+              type: 'info',
+              item: res.data.item
+            })
+            console.log(res.data)
+
+          })
+      }, 500);
       const currentLines = otherLines
       setOtherlins({
         ...otherLines,
@@ -123,6 +163,7 @@ function Index() {
     }
   }
   const handleLeave = (e) => {
+    clearTimeout(timeOut)
     if (highlightSwitch.status) {
       const name = e.target.getAttribute('name');
       if (otherLines.toggle && checkNode(name)) {
@@ -219,7 +260,8 @@ function Index() {
             style={{ top: `${shop.y}vh`, left: `${shop.x}vw` }}
             name={shop.num}
             onMouseOver={handleHover}
-            onMouseOut={handleLeave}>
+            onMouseOut={handleLeave}
+            onClick={clickShop}>
             <span name={shop.num} className={shop.icon} />
           </div>
         ))}

@@ -1,7 +1,7 @@
 const express = require("express");
 const app = express();
 const PORT = process.env.PORT || 3001;
-const [tag, secTag, reset, restart] = require('./utils/customer');
+const [tag, secTag, reset, restart, search] = require('./utils/customer');
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 // Serve up static assets (usually on heroku)
@@ -21,7 +21,19 @@ app.get('/api', (req, res) => {
   res.json({
     message: 'server reset'
   })
+});
+app.post('/api/info', (req, res) => {
+  const name = req.body.name
+  search(name)
+    .then(data => {
+      const item = JSON.parse(data)
+      res.json({
+        message: 'found',
+        item: item
+      })
+    })
 })
+
 app.post('/api', (req, res) => {
   reset();
   const { phoneNumber, numdays } = req.body

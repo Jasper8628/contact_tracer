@@ -4,6 +4,11 @@ const { Provider } = NewContext;
 
 const reducer = (state, action) => {
   switch (action.type) {
+    case 'info':
+      return {
+        ...state,
+        item: action.item
+      }
     case 'zero':
       return {
         ...state,
@@ -43,7 +48,10 @@ const ContextProvider = ({ value = 0, ...props }) => {
     zero: [],
     closeContacts: [],
     secondShops: [],
-    secondContacts: []
+    secondContacts: [],
+    item: {
+      dates: []
+    }
   }
   );
   return <Provider value={[global, dispatch]} {...props} />
