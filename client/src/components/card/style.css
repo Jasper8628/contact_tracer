@@ -36,13 +36,23 @@
 
 }
 .card summary{
+  outline: none;
+  margin: 2%;
   color: rgba(255, 255, 255, 0.603);
   cursor: pointer;
+}
+.content{
+  margin-left: 5%;
+}
+.content p{
+  margin-left: 5%;
+
 }
 .card details{
   color: rgba(255, 255, 255, 0.603);
   cursor: pointer;
 }
+
 .card li{
   color: rgba(255, 255, 255, 0.603);
   cursor: pointer;
@@ -61,5 +71,6 @@
   /* margin-left: 5%; */
   width: 12vw;
   height: 12vw;
-  background: rgba(255, 255, 255, 0.459);
+  /* background: rgba(255, 255, 255, 0.459); */
+  background: transparent;
 }
