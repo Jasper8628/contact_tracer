@@ -17,15 +17,14 @@ const firstSet = new Set();
 const secSet = new Set();
 app.get('/api/reset', (req, res) => {
   restart()
-  res.json({ arr: displayShops })
-  // .then(data => {
-  //   const arr = JSON.parse(data);
-  //   res.json({
-  //     arr: arr,
-  //     message: 'server reset'
-  //   })
-  //   console.log('server restarted')
-  // });
+    .then(data => {
+      const arr = JSON.parse(data);
+      res.json({
+        arr: arr,
+        message: 'server reset'
+      })
+      console.log('server restarted')
+    });
 })
 
 app.post('/api/info', (req, res) => {
