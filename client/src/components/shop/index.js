@@ -85,7 +85,6 @@ function Index() {
       const shopArr = shops
       arr.forEach((element, index) => {
         const { shopType } = element
-        console.log(arr.length)
         shopArr[index].icon = icons[shopType]
       });
       setShop(shopArr)

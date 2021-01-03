@@ -122,6 +122,20 @@ const reset = () => {
   set = new Set();
   firstSet = new Set();
   secSet = new Set();
+
+}
+const clearShops = () => {
+  reset()
+  shops.forEach(shop => {
+    const keys = Object.keys(shop)
+    keys.forEach(key => {
+      shop[key].status = ''
+      const hours = Object.keys(shop[key])
+      hours.forEach(hour => {
+        shop[key][hour].status = ''
+      })
+    })
+  })
 }
 const restart = async () => {
   reset()
@@ -203,8 +217,8 @@ const secTag = async (arr, isSecRound) => {
     const shop = shops.find(shop => shop.phoneNumber === item.phoneNumber);
     const { visitDate, from, to, phoneNumber } = item;
     const index = shops.findIndex(store => store.phoneNumber === shop.phoneNumber)
-    shops[index][visitDate].status = 'tagged'
-    shops[index][visitDate][parseInt(from)].status = 'tagged'
+    if (!shops[index][visitDate].status) { shops[index][visitDate].status = 'tagged' }
+    if (!shops[index][visitDate][parseInt(from)].status) shops[index][visitDate][parseInt(from)].status = 'tagged'
     const newTo = Math.floor(to)
     const newFrom = Math.floor(from)
     const thenDays = new Date(visitDate) / 1000 / 3600 / 24;
@@ -255,4 +269,4 @@ const secTag = async (arr, isSecRound) => {
 }
 
 restart()
-module.exports = [tag, secTag, reset, restart, search, displayShops, reset];
+module.exports = [tag, secTag, reset, restart, search, displayShops, clearShops];

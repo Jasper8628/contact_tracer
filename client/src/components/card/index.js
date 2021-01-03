@@ -5,6 +5,7 @@ import './style.css'
 function Index() {
   const [global, dispatch] = useNewContext();
   const [viewSize, setViewsize] = useState('')
+  const [rotate, setRotate] = useState({})
   useLayoutEffect(() => {
     function updateSize() {
       if (window.innerWidth < 1000) {
@@ -21,6 +22,24 @@ function Index() {
     updateSize();
     return () => window.removeEventListener('resize', updateSize);
   }, []);
+  const handleClick = (e) => {
+    const name = e.target.getAttribute('name');
+    // const detail=document.getElementById(name).tog
+    // detail.toggle
+    console.log(name)
+    setRotate({
+      ...rotate,
+      [name]: rotate[name] !== '90deg' ? '90deg' : '0deg'
+    })
+  }
+  const handleLeave = (e) => {
+    const name = e.target.getAttribute('name');
+    console.log(name)
+    setRotate({
+      ...rotate,
+      [name]: rotate[name] !== '90deg' ? '90deg' : '0deg'
+    })
+  }
 
   const qr = {
     name: global.item.name,
@@ -29,7 +48,6 @@ function Index() {
   }
   const qrStr = JSON.stringify(qr)
   const vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0)
-  console.log(vw)
   return (
     <div className='card'>
       <div className='cardContainer'>
@@ -43,26 +61,26 @@ function Index() {
             imageSettings={{ height: 5, width: 5 }}
           />
         </div>
-        <h3>{global.item.status ? global.item.status : ''} </h3>
+        {/* <h3>{global.item.status ? global.item.status : ''} </h3> */}
         <h1>{global.item.name ? global.item.name : 'none'}</h1>
         <h2><span className='fas fa-phone-alt' />  {global.item.phoneNumber ? global.item.phoneNumber : 'none'}</h2>
-        <p>Dates since exposure</p>
+        {/* <p>Dates since exposure</p> */}
         {global.item.dates.map((date, index) => (
-          <details key={index}>
-            <summary>{date.date}</summary>
+          <div className='date' key={index}>
+            <h3>{date.date} :</h3>
             {date.log.map((entry, index) => (
               global.item.type === 'shop' ?
                 <div className='content' >
-                  <details key={index} >
-                    <summary>{entry.hour} : 00 </summary>
+                  <details name={`${entry.hour}${date.date}`} key={index} >
+                    <summary name={`${entry.hour}${date.date}`}  > <span className='fas fa-chevron-circle-right' /> {entry.hour} : 00 </summary>
                     {entry.log.map((customer, index) => (
                       <p key={index} ><span className='fas fa-phone-alt' />  {customer.phoneNumber}</p>
                     ))}
                   </details>
                 </div> :
                 <div className='content' >
-                  <details>
-                    <summary>{entry.shopName}: </summary>
+                  <details name={`${entry.shopName}${date.date}`}  >
+                    <summary name={`${entry.shopName}${date.date}`} > <span className='fas fa-chevron-circle-right' /> {entry.shopName}: </summary>
                     <div className='content'>
                       <p><span className='fas fa-phone-alt' />  {entry.phoneNumber}  </p>
                       <p>from: {parseInt(entry.from)} :
@@ -76,7 +94,7 @@ function Index() {
 
                 </div>
             ))}
-          </details>
+          </div>
         ))}
       </div>
     </div>

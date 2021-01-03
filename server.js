@@ -1,7 +1,7 @@
 const express = require("express");
 const app = express();
 const PORT = process.env.PORT || 3001;
-const [tag, secTag, reset, restart, search, displayShops] = require('./utils/customer');
+const [tag, secTag, reset, restart, search, displayShops, clearShops] = require('./utils/customer');
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 // Serve up static assets (usually on heroku)
@@ -16,7 +16,9 @@ const set = new Set();
 const firstSet = new Set();
 const secSet = new Set();
 app.get('/api/reset', (req, res) => {
-  restart()
+  // restart()
+  // res.json({ arr: displayShops })
+  clearShops()
     .then(data => {
       const arr = JSON.parse(data);
       res.json({
