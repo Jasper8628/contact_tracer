@@ -23,11 +23,13 @@ const handleTag = (res, name, colors, setColor,
   const lineShop = secondShops;
   const lineSecond = secondContacts;
   const tempCustomerArr = [];
-  const tempShopArr = []
+  const tempShopArr = [];
+  const tempPairArr = [];
   primeContact.forEach((element) => {
     tempShopArr.push(element.phoneNumber)
     const [x0, y0] = genXY(element.phoneNumber)
     element.customersToTag.forEach((customer) => {
+      tempPairArr.push(customer + element.phoneNumber)
       const [x1, y1] = genXY(customer)
       if (customer === name) {
         lineZero.push({ x0: x1, y0: y1, x1: x0, y1: y0, start: customer, end: element.phoneNumber })
@@ -48,9 +50,10 @@ const handleTag = (res, name, colors, setColor,
     const shopNum = element.phoneNumber
     const [x0, y0] = genXY(shopNum)
     element.customersToTag.forEach((customer) => {
+      const pair = customer + element.phoneNumber
       const [x1, y1] = genXY(customer)
       if (tempCustomerArr.indexOf(customer) !== -1) {
-        if (tempShopArr.indexOf(shopNum) === -1) {
+        if (tempPairArr.indexOf(pair) === -1) {
           lineShop.push({ x0: x1, y0: y1, x1: x0, y1: y0, start: customer, end: element.phoneNumber })
           setSecShop(lineShop);
         }

@@ -27,11 +27,11 @@ const search = async (num, shopType) => {
       const keys = Object.keys(shop)
       const dates = [];
       keys.forEach(key => {
-        if (shop[key].length !== 0 && typeof (shop[key]) !== 'string') {
+        if (shop[key].status === 'tagged') {
           const hours = Object.keys(shop[key])
           const log = []
           hours.forEach(hour => {
-            if (shop[key][hour].length) {
+            if (shop[key][hour].status === 'tagged') {
               log.push({
                 hour: hour,
                 log: shop[key][hour]
@@ -57,14 +57,23 @@ const search = async (num, shopType) => {
     const customer = customers[num]
     const keys = Object.keys(customer)
     const dates = [];
-    keys.forEach(key => {
-      if (customer[key].length !== 0 && typeof (customer[key]) !== 'string') {
+    for (let i = 14 - customer.numdays; i < 14; i++) {
+      const date = countDay(i);
+      if (customer[date].length) {
         dates.push({
-          date: key,
-          log: customer[key]
+          date: date,
+          log: customer[date]
         })
       }
-    })
+    }
+    // keys.forEach(key => {
+    //   if (customer[key].length !== 0 && typeof (customer[key]) !== 'string') {
+    //     dates.push({
+    //       date: key,
+    //       log: customer[key]
+    //     })
+    //   }
+    // })
     item = {
       phoneNumber: customer.phoneNumber,
       status: customer.status,
@@ -169,6 +178,9 @@ const restart = () => {
 
 const tag = async (phoneNumber, numdays) => {
   const customer = customers[phoneNumber]
+  if (!customers[phoneNumber].numdays) {
+    customers[phoneNumber].numdays = numdays
+  }
   if (customer !== undefined) {
     for (let i = 14 - numdays; i < 14; i++) {
       const date = countDay(i);
@@ -193,8 +205,11 @@ const secTag = async (arr, isSecRound) => {
   primeContact = []
   arr.forEach(item => {
     const newSet = new Set();
-    const shop = shops.find(shop => shop.shopName === item.shopName);
+    const shop = shops.find(shop => shop.phoneNumber === item.phoneNumber);
     const { visitDate, from, to, phoneNumber } = item;
+    const index = shops.findIndex(store => store.phoneNumber === shop.phoneNumber)
+    shops[index][visitDate].status = 'tagged'
+    shops[index][visitDate][parseInt(from)].status = 'tagged'
     const newTo = Math.floor(to)
     const newFrom = Math.floor(from)
     const thenDays = new Date(visitDate) / 1000 / 3600 / 24;
@@ -203,7 +218,12 @@ const secTag = async (arr, isSecRound) => {
     let tempArr = []
     if (newTo === newFrom) {
       tempArr = shop[visitDate][newFrom]
-    } else { tempArr = shop[visitDate][newFrom].concat(shop[visitDate][newTo]) }
+    } else {
+      tempArr = shop[visitDate][newFrom].concat()
+      if ((newTo - newFrom) > 2) {
+        tempArr = tempArr.concat(shop[visitDate][newTo - 1])
+      }
+    }
     tempArr.forEach(customer => {
       const phoneNum = customer.phoneNumber;
       if (!isSecRound) {
@@ -212,6 +232,9 @@ const secTag = async (arr, isSecRound) => {
       } else {
         if (customers[phoneNum].status !== 'red') {
           customers[phoneNum].status = 'yellow'
+          if (!customers[phoneNum].numdays) {
+            customers[phoneNum].numdays = numDays
+          }
           secSet.add(phoneNum)
         }
       }
