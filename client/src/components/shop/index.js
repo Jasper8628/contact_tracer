@@ -29,7 +29,7 @@ function Index() {
   const [highLight, setHighLight] = useState({})
   const [profile, setProfile] = useState({})
   const [input, setInput] = useState({
-    name: '0500000000',
+    name: '0440000000',
     days: 14
   })
   const [highlightSwitch, setSwitch] = useState({
@@ -77,7 +77,7 @@ function Index() {
     setSecCont([])
     setShopColor({})
     setColor({});
-    axios.get('/api').then(res => console.log(res));
+    axios.get('/api/reset').then(res => console.log(res));
   }
   const genRandom = (array) => {
     const ranNum = Math.floor(Math.random() * array.length);
@@ -212,7 +212,7 @@ function Index() {
     const name = e.target.getAttribute('name');
     let value = e.target.value;
     if (name === 'name') {
-      value = '0' + (parseInt(value) + 500000000)
+      value = '0' + (parseInt(value) + 440000000)
     }
     setInput({ ...input, [name]: value })
   }
@@ -220,7 +220,7 @@ function Index() {
     let name = input.name
     let days = input.days
     if (e.target.id === 'random') {
-      const num = '0' + Math.floor(Math.random() * 1999 + 500000000);
+      const num = '0' + Math.floor(Math.random() * 1999 + 440000000);
       name = num;
       days = 14;
     }

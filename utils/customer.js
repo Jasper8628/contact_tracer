@@ -1,10 +1,12 @@
 let customers = {};
 let shops = [];
+let displayShops = [];
 let set = new Set();
 let firstSet = new Set();
 let secSet = new Set();
 let listOfShops = []
 let primeContact = []
+const shopTypes = ['restaurant', 'bar', 'cafe', 'grocery', 'gym', 'busStop', 'office', 'clinic']
 const openingHours = [8, 9, 10, 11, 12, 13, 14, 15, 16, 17];
 const durations = [30, 60, 90, 120, 150];
 const gap = [];
@@ -22,11 +24,6 @@ const search = async (num, shopType) => {
   let item = {}
   shops.forEach((shop, index) => {
     if (shop.phoneNumber === num) {
-      let shopName = '';
-      if (shopType !== 'grocery' && shopType !== 'busStop') {
-        shopName = `${genRandom(lastNames)}'s ${genRandom(shopNames[shopType])}`
-      } else { shopName = `${genRandom(shopNames[shopType])}` }
-      if (!shops[index].name) { shops[index].name = shopName }
       const keys = Object.keys(shop)
       const dates = [];
       keys.forEach(key => {
@@ -49,7 +46,7 @@ const search = async (num, shopType) => {
       })
       item = {
         phoneNumber: shop.phoneNumber,
-        name: shops[index].name,
+        name: shops[index].shopName,
         status: '',
         dates: dates,
         type: 'shop'
@@ -131,12 +128,18 @@ const restart = () => {
   shops = [];
   for (let i = 0; i < numShops; i++) {
     const num = '0' + (i + 900000000)
+    let shopName = '';
+    const shopType = genRandom(shopTypes)
+    if (shopType !== 'grocery' && shopType !== 'busStop') {
+      shopName = `${genRandom(lastNames)}'s ${genRandom(shopNames[shopType])}`
+    } else { shopName = `${genRandom(shopNames[shopType])}` }
     shops.push({
-      shopName: 'random shop' + i,
+      shopName: shopName,
       'phoneNumber': num,
       'type': 'shop'
     })
   }
+  displayShops = shops
   for (let j = 0; j < 14; j++) {
     const date = countDay(j);
     shops.forEach(shop => {

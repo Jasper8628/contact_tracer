@@ -37,7 +37,8 @@ function Index() {
           <QRcode
             value={qrStr}
             size={parseInt(viewSize)}
-            bgColor={global.item.status ? global.item.status : 'white'}
+            bgColor={global.item.status === 'red' ?
+              'rgb(255,0,0,0.8' : global.item.status === 'yellow' ? 'rgb(255,255,0,0.7' : 'rgb(255,255,255,0.6'}
             fgColor='black'
             imageSettings={{ height: 5, width: 5 }}
           />
@@ -45,7 +46,7 @@ function Index() {
         <h3>{global.item.status ? global.item.status : ''} </h3>
         <h1>{global.item.name ? global.item.name : 'none'}</h1>
         <h2><span className='fas fa-phone-alt' />  {global.item.phoneNumber ? global.item.phoneNumber : 'none'}</h2>
-        <p>Dates of exposure</p>
+        <p>Dates since exposure</p>
         {global.item.dates.map((date, index) => (
           <details key={index}>
             <summary>{date.date}</summary>

@@ -15,7 +15,7 @@ if (process.env.NODE_ENV === "production") {
 const set = new Set();
 const firstSet = new Set();
 const secSet = new Set();
-app.get('/api', (req, res) => {
+app.get('/api/reset', (req, res) => {
   restart()
   console.log('server restarted')
   res.json({
