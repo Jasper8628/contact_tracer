@@ -66,14 +66,6 @@ const search = async (num, shopType) => {
         })
       }
     }
-    // keys.forEach(key => {
-    //   if (customer[key].length !== 0 && typeof (customer[key]) !== 'string') {
-    //     dates.push({
-    //       date: key,
-    //       log: customer[key]
-    //     })
-    //   }
-    // })
     item = {
       phoneNumber: customer.phoneNumber,
       status: customer.status,
@@ -131,10 +123,11 @@ const reset = () => {
   firstSet = new Set();
   secSet = new Set();
 }
-const restart = () => {
+const restart = async () => {
   reset()
   customers = {};
   shops = [];
+  displayShops = []
   for (let i = 0; i < numShops; i++) {
     const num = '0' + (i + 900000000)
     let shopName = '';
@@ -145,10 +138,11 @@ const restart = () => {
     shops.push({
       shopName: shopName,
       'phoneNumber': num,
-      'type': 'shop'
+      'type': 'shop',
+      icon: shopType
     })
+    displayShops.push({ shopName, num, shopType })
   }
-  displayShops = shops
   for (let j = 0; j < 14; j++) {
     const date = countDay(j);
     shops.forEach(shop => {
@@ -174,6 +168,7 @@ const restart = () => {
       generateVisit(j, customers[numStr], visits, offset)
     }
   }
+  return JSON.stringify(displayShops)
 }
 
 const tag = async (phoneNumber, numdays) => {
@@ -260,4 +255,4 @@ const secTag = async (arr, isSecRound) => {
 }
 
 restart()
-module.exports = [tag, secTag, reset, restart, search];
+module.exports = [tag, secTag, reset, restart, search, displayShops, reset];

@@ -60,14 +60,17 @@ function Index() {
       const y = Math.random() * 65 + 3
       people.push({ x, y, num })
     }
-    for (let i = 0; i < 100; i++) {
-      const num = '0' + (900000000 + i);
-      const x = Math.random() * 65 + 2
-      const y = Math.random() * 65 + 3
-      const icon = genRandom(icons)
-      shopArr.push({ x, y, num, icon: icon.icon, shopType: icon.name })
-    }
-    setShop(shopArr)
+    axios.get('/api').then(res => {
+      const arr = res.data.arr
+      arr.forEach(element => {
+        const { num, shopType } = element
+        const x = Math.random() * 65 + 2
+        const y = Math.random() * 65 + 3
+        console.log(shopType, icons[shopType])
+        shopArr.push({ x, y, num, icon: icons[shopType] })
+      });
+      setShop(shopArr)
+    })
     setPosition(people)
   }
   const reset = () => {
@@ -77,7 +80,16 @@ function Index() {
     setSecCont([])
     setShopColor({})
     setColor({});
-    axios.get('/api/reset').then(res => console.log(res));
+    axios.get('/api/reset').then(res => {
+      const arr = res.data.arr
+      const shopArr = shops
+      arr.forEach((element, index) => {
+        const { shopType } = element
+        console.log(arr.length)
+        shopArr[index].icon = icons[shopType]
+      });
+      setShop(shopArr)
+    });
   }
   const genRandom = (array) => {
     const ranNum = Math.floor(Math.random() * array.length);

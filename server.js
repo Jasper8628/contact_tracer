@@ -1,7 +1,7 @@
 const express = require("express");
 const app = express();
 const PORT = process.env.PORT || 3001;
-const [tag, secTag, reset, restart, search] = require('./utils/customer');
+const [tag, secTag, reset, restart, search, displayShops] = require('./utils/customer');
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 // Serve up static assets (usually on heroku)
@@ -17,11 +17,17 @@ const firstSet = new Set();
 const secSet = new Set();
 app.get('/api/reset', (req, res) => {
   restart()
-  console.log('server restarted')
-  res.json({
-    message: 'server reset'
-  })
-});
+  res.json({ arr: displayShops })
+  // .then(data => {
+  //   const arr = JSON.parse(data);
+  //   res.json({
+  //     arr: arr,
+  //     message: 'server reset'
+  //   })
+  //   console.log('server restarted')
+  // });
+})
+
 app.post('/api/info', (req, res) => {
   const { name, shopType } = req.body
   search(name, shopType)
@@ -33,7 +39,9 @@ app.post('/api/info', (req, res) => {
       })
     })
 })
-
+app.get('/api', (req, res) => {
+  res.json({ arr: displayShops })
+})
 app.post('/api', (req, res) => {
   reset();
   const { phoneNumber, numdays } = req.body

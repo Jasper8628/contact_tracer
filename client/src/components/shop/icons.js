@@ -1,27 +1,27 @@
-const icons = [
-  {
-    name: 'restaurant',
-    icon: 'fas fa-utensils'
-  }, {
-    name: 'bar',
-    icon: 'fas fa-cocktail'
-  }, {
-    name: 'cafe',
-    icon: 'fas fa-coffee'
-  }, {
-    name: 'grocery',
-    icon: 'fas fa-shopping-cart'
-  }, {
-    name: 'gym',
-    icon: 'fas fa-swimmer'
-  }, {
-    name: 'busStop',
-    icon: 'fas fa-bus-alt'
-  }, {
-    name: 'office',
-    icon: 'far fa-building'
-  }, {
-    name: 'clinic',
-    icon: 'fas fa-stethoscope'
-  }]
+const icons =
+{
+  'restaurant':
+    'fas fa-utensils'
+  ,
+  'bar':
+    'fas fa-cocktail'
+  ,
+  'cafe':
+    'fas fa-coffee'
+  ,
+  'grocery':
+    'fas fa-shopping-cart'
+  ,
+  'gym':
+    'fas fa-swimmer'
+  ,
+  'busStop':
+    'fas fa-bus-alt'
+  ,
+  'office':
+    'far fa-building'
+  ,
+  'clinic':
+    'fas fa-stethoscope'
+}
 export default icons
