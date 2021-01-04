@@ -11,7 +11,7 @@ const genXY = (id) => {
 }
 const handleTag = (res, name, colors, setColor,
   shopColor, setShopColor, zero, setZero, closeContacts, setClose,
-  secondShops, setSecShop, secondContacts, setSecCont) => {
+  secondShops, setSecShop, secondContacts, setSecCont, people) => {
   const arr = res.data.closeContacts
   const arr2 = res.data.secondContacts
   const primeContact = res.data.primaryContacts;
@@ -32,10 +32,16 @@ const handleTag = (res, name, colors, setColor,
       tempPairArr.push(customer + element.phoneNumber)
       const [x1, y1] = genXY(customer)
       if (customer === name) {
-        lineZero.push({ x0: x1, y0: y1, x1: x0, y1: y0, start: customer, end: element.phoneNumber })
+        lineZero.push({
+          x0: x1, y0: y1, x1: x0, y1: y0, start: customer, end: element.phoneNumber,
+          startName: people[customer].name, endName: element.shopName
+        })
         setZero(lineZero);
       } else {
-        lineClose.push({ x0, y0, x1, y1, start: element.phoneNumber, end: customer })
+        lineClose.push({
+          x0, y0, x1, y1, start: element.phoneNumber, end: customer,
+          startName: element.shopName, endName: people[customer].name
+        })
         tempCustomerArr.push(customer)
         setClose(lineClose)
       }
@@ -54,11 +60,17 @@ const handleTag = (res, name, colors, setColor,
       const [x1, y1] = genXY(customer)
       if (tempCustomerArr.indexOf(customer) !== -1) {
         if (tempPairArr.indexOf(pair) === -1) {
-          lineShop.push({ x0: x1, y0: y1, x1: x0, y1: y0, start: customer, end: element.phoneNumber })
+          lineShop.push({
+            x0: x1, y0: y1, x1: x0, y1: y0, start: customer, end: element.phoneNumber,
+            startName: people[customer].name, endName: element.shopName
+          })
           setSecShop(lineShop);
         }
       } else if (customer !== name) {
-        lineSecond.push({ x0, y0, x1, y1, start: element.phoneNumber, end: customer })
+        lineSecond.push({
+          x0, y0, x1, y1, start: element.phoneNumber, end: customer,
+          startName: element.shopName, endName: people[customer].name
+        })
         setSecCont(lineSecond)
       }
     })

@@ -1,7 +1,7 @@
 const express = require("express");
 const app = express();
 const PORT = process.env.PORT || 3001;
-const [tag, secTag, reset, restart, search, displayShops, clearShops] = require('./utils/customer');
+const [tag, secTag, reset, restart, search, displayShops, displayCustomers, clearShops] = require('./utils/customer');
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 // Serve up static assets (usually on heroku)
@@ -20,9 +20,9 @@ app.get('/api/reset', (req, res) => {
   // res.json({ arr: displayShops })
   clearShops()
     .then(data => {
-      const arr = JSON.parse(data);
+      // const arr = JSON.parse(data);
       res.json({
-        arr: arr,
+        arr: displayShops,
         message: 'server reset'
       })
       console.log('server restarted')
@@ -41,7 +41,7 @@ app.post('/api/info', (req, res) => {
     })
 })
 app.get('/api', (req, res) => {
-  res.json({ arr: displayShops })
+  res.json({ arr: displayShops, arr2: displayCustomers })
 })
 app.post('/api', (req, res) => {
   reset();

@@ -71,16 +71,20 @@ function Index() {
             {date.log.map((entry, index) => (
               global.item.type === 'shop' ?
                 <div className='content' >
-                  <details name={`${entry.hour}${date.date}`} key={index} >
-                    <summary name={`${entry.hour}${date.date}`}  > <span className='fas fa-chevron-circle-right' /> {entry.hour} : 00 </summary>
+                  <details >
+                    <summary  ><span className='fas fa-chevron-circle-right' /> {entry.hour} : 00 </summary>
                     {entry.log.map((customer, index) => (
-                      <p key={index} ><span className='fas fa-phone-alt' />  {customer.phoneNumber}</p>
+                      <div className='content' key={index} >
+                        <p><span className='far fa-user' /> {customer.name} </p>
+                        <p><span className='fas fa-mobile-alt' /> {customer.phoneNumber}</p>
+                      </div>
                     ))}
                   </details>
-                </div> :
+                </div>
+                :
                 <div className='content' >
-                  <details name={`${entry.shopName}${date.date}`}  >
-                    <summary name={`${entry.shopName}${date.date}`} > <span className='fas fa-chevron-circle-right' /> {entry.shopName}: </summary>
+                  <details  >
+                    <summary  > <span className='fas fa-chevron-circle-right' /> {entry.shopName}: </summary>
                     <div className='content'>
                       <p><span className='fas fa-phone-alt' />  {entry.phoneNumber}  </p>
                       <p>from: {parseInt(entry.from)} :

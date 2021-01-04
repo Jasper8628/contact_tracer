@@ -19,6 +19,7 @@ let timeOut;
 function Index() {
   const [global, dispatch] = useNewContext();
   const [positions, setPosition] = useState([]);
+  const [people, setPeople] = useState({})
   const [shops, setShop] = useState([]);
   const [colors, setColor] = useState({});
   const [shopColor, setShopColor] = useState({});
@@ -61,7 +62,7 @@ function Index() {
       people.push({ x, y, num })
     }
     axios.get('/api').then(res => {
-      const arr = res.data.arr
+      const { arr, arr2 } = res.data
       arr.forEach(element => {
         const { num, shopType } = element
         const x = Math.random() * 65 + 2
@@ -70,6 +71,7 @@ function Index() {
         shopArr.push({ x, y, num, icon: icons[shopType] })
       });
       setShop(shopArr)
+      setPeople(arr2)
     })
     setPosition(people)
   }
@@ -121,7 +123,7 @@ function Index() {
       .then(res => handleTag(res, name,
         colors, setColor, shopColor, setShopColor,
         zero, setZero, closeContacts, setClose,
-        secondShops, setSecShop, secondContacts, setSecCont)
+        secondShops, setSecShop, secondContacts, setSecCont, people)
       )
       .then(() => {
         axios.post('/api/info', { name, shopType })
@@ -245,7 +247,7 @@ function Index() {
       .then(res => handleTag(res, name,
         colors, setColor, shopColor, setShopColor,
         zero, setZero, closeContacts, setClose,
-        secondShops, setSecShop, secondContacts, setSecCont)
+        secondShops, setSecShop, secondContacts, setSecCont, people)
       )
   }
   return (

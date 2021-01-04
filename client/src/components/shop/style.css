@@ -25,6 +25,16 @@
   /* background: rgb(7, 7, 7); */
   border-radius: 20px;
 }
+.tip{
+  display: none;
+  background: black;
+  color: rgba(255, 255, 255, 0.527);
+  pointer-events: none;
+  position: absolute;
+  top:-100%;
+  left:-200%;
+  transform: translate(50%,50%);
+}
 @keyframes fadeInYellow{
   0%{
   border: rgba(17, 186, 238, 0.726) solid 2px;

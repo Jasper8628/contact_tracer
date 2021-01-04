@@ -46,13 +46,16 @@
 .card summary{
   outline: none;
   margin: 3%;
-  color: rgba(255, 255, 255, 0.603);
+  color: rgba(255, 255, 255, 0.801);
   cursor: pointer;
   transition: 0.5s;
 }
+
+details span{
+  color: rgba(255, 255, 255, 0.514);
+  margin-right: 3px;
+}
 summary::-webkit-details-marker{
-  /* background: none;
-  color: transparent; */
   display: none;
 }
 details[open] summary ~ *{
@@ -92,7 +95,7 @@ details[open] summary span{
 
 }
 .card details{
-  color: rgba(255, 255, 255, 0.603);
+  color: rgba(255, 255, 255, 0.753);
   cursor: pointer;
 }
 
@@ -101,7 +104,7 @@ details[open] summary span{
   cursor: pointer;
 }
 .card p{
-  color: rgba(255, 255, 255, 0.603);
+  color: rgba(255, 255, 255, 0.76);
   cursor: pointer;
 
 }

@@ -1,6 +1,7 @@
 let customers = {};
 let shops = [];
 let displayShops = [];
+let displayCustomers = {};
 let set = new Set();
 let firstSet = new Set();
 let secSet = new Set();
@@ -110,7 +111,8 @@ const generateVisit = (iter, customer, visits, offset) => {
       shop[newDate][newTime].push({
         'phoneNumber': customer.phoneNumber,
         'status': customer.status,
-        'duration': duration * 60 + 'minutes'
+        'duration': duration * 60 + 'minutes',
+        name: customer.name
       })
     }
     hour = hour + gapTime + duration;
@@ -124,7 +126,7 @@ const reset = () => {
   secSet = new Set();
 
 }
-const clearShops = () => {
+const clearShops = async () => {
   reset()
   shops.forEach(shop => {
     const keys = Object.keys(shop)
@@ -176,8 +178,9 @@ const restart = async () => {
       'status': 'negative',
       'type': 'customer',
       'name': `${firstName} ${lastName}`
-
     };
+    displayCustomers = customers;
+
     for (let j = 0; j < 14; j++) {
       generateVisit(j, customers[numStr], visits, offset)
     }
@@ -198,6 +201,7 @@ const tag = async (phoneNumber, numdays) => {
           shopName: shop.shopName,
           phoneNumber: shop.phoneNumber,
           customer: phoneNumber,
+          customerName: customer.name,
           visitDate: date,
           from: shop.from,
           to: shop.to
@@ -215,7 +219,7 @@ const secTag = async (arr, isSecRound) => {
   arr.forEach(item => {
     const newSet = new Set();
     const shop = shops.find(shop => shop.phoneNumber === item.phoneNumber);
-    const { visitDate, from, to, phoneNumber } = item;
+    const { visitDate, from, to, phoneNumber, shopName } = item;
     const index = shops.findIndex(store => store.phoneNumber === shop.phoneNumber)
     if (!shops[index][visitDate].status) { shops[index][visitDate].status = 'tagged' }
     if (!shops[index][visitDate][parseInt(from)].status) shops[index][visitDate][parseInt(from)].status = 'tagged'
@@ -235,23 +239,24 @@ const secTag = async (arr, isSecRound) => {
     }
     tempArr.forEach(customer => {
       const phoneNum = customer.phoneNumber;
+      const name = customer.name;
+      if (!customers[phoneNum].numdays) {
+        customers[phoneNum].numdays = numDays
+      }
       if (!isSecRound) {
         customers[phoneNum].status = 'red'
         firstSet.add(phoneNum)
       } else {
         if (customers[phoneNum].status !== 'red') {
           customers[phoneNum].status = 'yellow'
-          if (!customers[phoneNum].numdays) {
-            customers[phoneNum].numdays = numDays
-          }
           secSet.add(phoneNum)
         }
       }
-      newSet.add(customer.phoneNumber);
+      newSet.add(phoneNum);
       set.add(customer.phoneNumber)
     })
     const customersToTag = Array.from(newSet)
-    primeContact.push({ phoneNumber, customersToTag })
+    primeContact.push({ phoneNumber, customersToTag, shopName })
     if (!isSecRound) {
       customersToTag.forEach(number => {
         tag(number, numDays)
@@ -269,4 +274,4 @@ const secTag = async (arr, isSecRound) => {
 }
 
 restart()
-module.exports = [tag, secTag, reset, restart, search, displayShops, clearShops];
+module.exports = [tag, secTag, reset, restart, search, displayShops, displayCustomers, clearShops];
