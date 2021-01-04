@@ -46,7 +46,7 @@ function Index() {
     'line1': 'far fa-dot-circle', 'line2': 'far fa-dot-circle', 'line3': 'far fa-dot-circle', 'line4': 'far fa-dot-circle'
   })
   const [otherLines, setOtherlins] = useState({
-    line1: 'line1', line2: 'line2', line3: 'line3', line4: 'line4', toggle: false, text: 'far fa-circle', currentLines: {}
+    line1: 'line1', line2: 'line2', line3: 'line3', line4: 'line4', toggle: false, text: 'far fa-circle', veil: 0, currentLines: {}
   })
 
   useEffect(() => {
@@ -170,6 +170,7 @@ function Index() {
         line2: otherLines.line2 === 'line2' ? 'line2dim' : '',
         line3: otherLines.line3 === 'line3' ? 'line3dim' : '',
         line4: otherLines.line4 === 'line4' ? 'line4dim' : '',
+        veil: 0.3,
         currentLines
       })
       const lineArr = highLight;
@@ -183,6 +184,7 @@ function Index() {
       const name = e.target.getAttribute('name');
       if (otherLines.toggle && checkNode(name)) {
         const currentLines = otherLines.currentLines
+        currentLines.veil = 0;
         setOtherlins(currentLines)
         const lineArr = highLight;
         lineArr[name] = ''
@@ -257,7 +259,8 @@ function Index() {
       <SvgLine lineArr={secondShops} lineDisplay={lineDisplay} otherLines={otherLines.line3} highLight={highLight} />
       <SvgLine lineArr={secondContacts} lineDisplay={lineDisplay} otherLines={otherLines.line4} highLight={highLight} />
       <HeadBar handleChange={handleChange} handleSubmit={handleSubmit} input={input} />
-      <div className='container' >
+
+      <div className='container'>
         {positions.map((position, index) => (
           <div key={index}
             className={colors[position.num] || 'normal'}
@@ -288,6 +291,7 @@ function Index() {
           clearLine={clearLine}
           lineDisplay={lineDisplay}
           reset={reset} />
+        <div className='veil' style={{ background: `rgb(0,0,0,${otherLines.veil})` }} ></div>
       </div>
     </div>
   )
