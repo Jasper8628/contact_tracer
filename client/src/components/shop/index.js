@@ -231,36 +231,36 @@ function Index() {
 
   const handleChange = (e) => {
     const name = e.target.getAttribute('name');
+    console.log(name)
     let value = e.target.value;
-    console.log(parseInt(value), 'logging value: ', value)
     if ((isNaN(parseInt(value)) && value !== '') || parseInt(value) > 2000) {
       setGuide({
         ...guide,
         warning: { display: 'block', errorFree: false }
       })
     }
-    else if (value === "" || " ") {
+    else if (value === "") {
       setGuide({
         ...guide,
         warning: { display: 'none', errorFree: true }
       })
       setInput({ ...input, [name]: '0440000000' })
-    }
-    else {
+    } else {
       setGuide({
         ...guide,
         warning: { display: 'none', errorFree: true }
       })
       if (name === 'name') {
         value = '0' + (parseInt(value) + 440000000)
-        setInput({ ...input, [name]: value })
       }
+      setInput({ ...input, [name]: value })
     }
   }
   const handleSubmit = (e) => {
 
     let name = input.name
     let days = input.days
+    console.log(name, days)
     if (e.target.id === 'random') {
       const num = '0' + Math.floor(Math.random() * 1999 + 440000000);
       name = num;
