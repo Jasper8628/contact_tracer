@@ -23,6 +23,7 @@ function Index() {
   const [secondContacts, setSecCont] = useState([]);
   const [highLight, setHighLight] = useState({});
   const [guide, setGuide] = useState({
+    warning: { errorFree: true, display: 'none' },
     guideSpin: { display: 'block' },
     guideClick: { count: false, display: 'none' },
     guideHover: { count: true, display: 'none', x: '', y: '' }
@@ -86,15 +87,16 @@ function Index() {
     setSecCont([])
     setShopColor({})
     setColor({});
-    API.reset().then(res => {
-      const arr = res.data.arr
-      const shopArr = shops
-      arr.forEach((element, index) => {
-        const { shopType } = element
-        shopArr[index].icon = icons[shopType]
-      });
-      setShop(shopArr)
-    });
+    API.reset()
+    // .then(res => {
+    //   const arr = res.data.arr
+    //   const shopArr = shops
+    //   arr.forEach((element, index) => {
+    //     const { shopType } = element
+    //     shopArr[index].icon = icons[shopType]
+    //   });
+    //   setShop(shopArr)
+    // });
   }
   const checkNode = (id) => {
     if (document.getElementById(id).classList.length > 1) {
@@ -131,6 +133,7 @@ function Index() {
         if (!guide.guideClick.count) {
           const node = genRandom(zero)
           setGuide({
+            ...guide,
             guideClick: { count: true, display: 'none' },
             guideHover: { count: false, display: 'block', x: node.x1, y: node.y1 }
           })
@@ -229,12 +232,33 @@ function Index() {
   const handleChange = (e) => {
     const name = e.target.getAttribute('name');
     let value = e.target.value;
-    if (name === 'name') {
-      value = '0' + (parseInt(value) + 440000000)
+    console.log(parseInt(value), 'logging value: ', value)
+    if ((isNaN(parseInt(value)) && value !== '') || parseInt(value) > 2000) {
+      setGuide({
+        ...guide,
+        warning: { display: 'block', errorFree: false }
+      })
     }
-    setInput({ ...input, [name]: value })
+    else if (value === "" || " ") {
+      setGuide({
+        ...guide,
+        warning: { display: 'none', errorFree: true }
+      })
+      setInput({ ...input, [name]: '0440000000' })
+    }
+    else {
+      setGuide({
+        ...guide,
+        warning: { display: 'none', errorFree: true }
+      })
+      if (name === 'name') {
+        value = '0' + (parseInt(value) + 440000000)
+        setInput({ ...input, [name]: value })
+      }
+    }
   }
   const handleSubmit = (e) => {
+
     let name = input.name
     let days = input.days
     if (e.target.id === 'random') {
@@ -242,18 +266,19 @@ function Index() {
       name = num;
       days = 14;
     }
-    setColor({ ...colors, [name]: primary })
-    const data = {
-      phoneNumber: name,
-      numdays: days
+    if (guide.warning.errorFree) {
+      setColor({ ...colors, [name]: primary })
+      const data = {
+        phoneNumber: name,
+        numdays: days
+      }
+      API.tag(data)
+        .then(res => handleTag(res, name,
+          colors, setColor, shopColor, setShopColor,
+          zero, setZero, closeContacts, setClose,
+          secondShops, setSecShop, secondContacts, setSecCont, people)
+        )
     }
-    console.log(data)
-    API.tag(data)
-      .then(res => handleTag(res, name,
-        colors, setColor, shopColor, setShopColor,
-        zero, setZero, closeContacts, setClose,
-        secondShops, setSecShop, secondContacts, setSecCont, people)
-      )
   }
   return (
     <div>

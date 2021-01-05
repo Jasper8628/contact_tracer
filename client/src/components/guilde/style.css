@@ -49,5 +49,28 @@
   top:50%;
   font-size: 3em;
   animation: guideSpinner 2s linear infinite;
-
+}
+.inputValidate{
+  display: flex;
+  position:absolute;
+  display:block;
+  top:5vh;
+  left:7.5vw;
+  color:white;
+  line-height: 0.5em;
+  font-size: 0.8em;
+  /* border: white solid 1px;
+  border-radius: 10px; */
+  z-index: 100;
+  padding:5px;
+  padding-top: 0px;
+}
+.inputValidate span{
+  margin-right: 5px;
+  animation: warning 3s linear infinite;
+}
+@keyframes warning {
+  0%{ color:rgba(255, 0, 0, 0.226) }
+  50%{ color:rgb(255, 0, 0) }
+  100%{ color:rgba(255, 0, 0, 0.226) }
 }
