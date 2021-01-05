@@ -3,6 +3,7 @@ import SvgLine from '../svgLines';
 import ToggleGroup from '../toggleGroup';
 import HeadBar from '../headBar';
 import handleTag from '../../utils/tag';
+import Guide from '../guilde'
 import './style.css'
 import { useNewContext } from '../../utils/global';
 import icons from './icons';
@@ -20,7 +21,11 @@ function Index() {
   const [closeContacts, setClose] = useState([]);
   const [secondShops, setSecShop] = useState([]);
   const [secondContacts, setSecCont] = useState([]);
-  const [highLight, setHighLight] = useState({})
+  const [highLight, setHighLight] = useState({});
+  const [guide, setGuide] = useState({
+    guideClick: { count: false, display: 'block' },
+    guideHover: { count: true, display: 'none', x: '', y: '' }
+  })
   const [input, setInput] = useState({
     name: '0440000000',
     days: 14
@@ -88,6 +93,10 @@ function Index() {
       return true
     } else { return false }
   }
+  const genRandom = (array) => {
+    const ranNum = Math.floor(Math.random() * array.length);
+    return array[ranNum]
+  }
   const handleClick = (e) => {
     clearTimeout(timeOut);
     const name = e.target.getAttribute('name');
@@ -111,6 +120,13 @@ function Index() {
         secondShops, setSecShop, secondContacts, setSecCont, people)
       )
       .then(() => {
+        if (!guide.guideClick.count) {
+          const node = genRandom(zero)
+          setGuide({
+            guideClick: { count: true, display: 'none' },
+            guideHover: { count: false, display: 'block', x: node.x1, y: node.y1 }
+          })
+        }
         API.search({ name })
           .then(result => {
             dispatch({
@@ -127,6 +143,12 @@ function Index() {
     const name = e.target.getAttribute('name');
     if (highlightSwitch.status && otherLines.toggle && checkNode(name)) {
       timeOut = setTimeout(() => {
+        if (!guide.guideHover.count) {
+          setGuide({
+            ...guide,
+            guideHover: { count: true, display: 'none', x: '', y: '' }
+          })
+        }
         API.search({ name })
           .then(res => {
             dispatch({
@@ -232,7 +254,7 @@ function Index() {
       <SvgLine lineArr={secondShops} lineDisplay={lineDisplay} otherLines={otherLines.line3} highLight={highLight} />
       <SvgLine lineArr={secondContacts} lineDisplay={lineDisplay} otherLines={otherLines.line4} highLight={highLight} />
       <HeadBar handleChange={handleChange} handleSubmit={handleSubmit} input={input} />
-
+      <Guide guide={guide} />
       <div className='container'>
         {positions.map((position, index) => (
           <div key={index}

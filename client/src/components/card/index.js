@@ -62,8 +62,8 @@ function Index() {
           />
         </div>
         {/* <h3>{global.item.status ? global.item.status : ''} </h3> */}
-        <h1>{global.item.name ? global.item.name : 'none'}</h1>
-        <h2><span className='fas fa-phone-alt' />  {global.item.phoneNumber ? global.item.phoneNumber : 'none'}</h2>
+        <h1>{global.item.name ? global.item.name : 'N/A'}</h1>
+        <h2><span className='fas fa-phone-alt' />  {global.item.phoneNumber ? global.item.phoneNumber : 'N/A'}</h2>
         {/* <p>Dates since exposure</p> */}
         {global.item.dates.map((date, index) => (
           <div className='date' key={index}>
