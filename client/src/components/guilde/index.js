@@ -15,6 +15,7 @@ function Index({ guide }) {
         <h2>Click a small circle to start</h2>
         <span className='far fa-hand-point-down' />
       </div>
+      <div style={{ display: `${guide.guideSpin.display}` }} className='guide guideSpin' ><span className='fas fa-spinner' /> </div>
     </div>
   )
 }

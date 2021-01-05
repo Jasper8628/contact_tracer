@@ -13,7 +13,7 @@
   background: rgba(0, 0, 0, 0.233);
   backdrop-filter: blur(2px);
 }
-.guide span{
+.guide .far{
   font-size: 2em;
   position: absolute;
   left: 50%;
@@ -29,6 +29,12 @@
   animation-delay: 8s;
   animation: showHover 4s linear forwards;
 }
+@keyframes guideSpinner {
+  0%{transform: rotateZ(0deg);}
+  50%{transform: rotateZ(180deg);}
+  100%{transform: rotateZ(360deg);}
+
+}
 @keyframes showHover{
   from {opacity: 0;}
   to{opacity: 1;}
@@ -37,4 +43,11 @@
         0%   { transform: translateY(10%); }
         50%  { transform: translateY(-40%); }
         100% { transform: translateY(10%); }
+}
+.guide .fa-spinner{
+  position: absolute;
+  top:50%;
+  font-size: 3em;
+  animation: guideSpinner 2s linear infinite;
+
 }

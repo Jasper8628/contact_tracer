@@ -23,7 +23,8 @@ function Index() {
   const [secondContacts, setSecCont] = useState([]);
   const [highLight, setHighLight] = useState({});
   const [guide, setGuide] = useState({
-    guideClick: { count: false, display: 'block' },
+    guideSpin: { display: 'block' },
+    guideClick: { count: false, display: 'none' },
     guideHover: { count: true, display: 'none', x: '', y: '' }
   })
   const [input, setInput] = useState({
@@ -50,15 +51,22 @@ function Index() {
     init()
   }, [])
   const init = () => {
-    const people = []
+    const dots = []
     const shopArr = []
     for (let i = 0; i < 2001; i++) {
       const num = '0' + (440000000 + i);
       const x = Math.random() * 65 + 2
       const y = Math.random() * 65 + 3
-      people.push({ x, y, num })
+      dots.push({ x, y, num })
     }
     API.init().then(res => {
+      setGuide({
+        ...guide,
+        guideSpin: { display: 'none' },
+        guideClick: { count: false, display: 'block' },
+
+
+      })
       const { arr, arr2 } = res.data
       arr.forEach(element => {
         const { num, shopType } = element
@@ -69,7 +77,7 @@ function Index() {
       setShop(shopArr)
       setPeople(arr2)
     })
-    setPosition(people)
+    setPosition(dots)
   }
   const reset = () => {
     setZero([])

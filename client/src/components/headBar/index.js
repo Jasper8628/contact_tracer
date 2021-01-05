@@ -10,7 +10,7 @@ function Index({ handleChange, handleSubmit, input }) {
         </div>
         {/* <h3>Trace someone by phone number: </h3> */}
         <p>0440-00-</p>
-        <input name='name' id='tagInput' placeholder='Trace someone by phone number... (enter 1~2000)' onChange={handleChange} />
+        <input name='name' id='tagInput' placeholder='Trace by phone number... (enter 1~2000)' onChange={handleChange} />
         <select name='days' onChange={handleChange} >
           <option name='14' value={input.value} >14</option>
           <option name='13' value={input.value}>13</option>
