@@ -2,22 +2,15 @@ import React, { useEffect, useState } from 'react';
 import SvgLine from '../svgLines';
 import ToggleGroup from '../toggleGroup';
 import HeadBar from '../headBar';
-import Card from '../card';
-import axios from 'axios';
 import handleTag from '../../utils/tag';
 import './style.css'
 import { useNewContext } from '../../utils/global';
 import icons from './icons';
-const red = 'red normal';
-const yToR = 'red normal yToR';
-const yellow = 'yellow normal';
-const primary = 'primary normal'
-const shopRed = 'red shop';
-const shopYR = 'red shop yToR';
-const shopYellow = 'yellow shop'
+import API from '../../utils/API';
 let timeOut;
+const primary = 'primary normal'
 function Index() {
-  const [global, dispatch] = useNewContext();
+  const [, dispatch] = useNewContext();
   const [positions, setPosition] = useState([]);
   const [people, setPeople] = useState({})
   const [shops, setShop] = useState([]);
@@ -28,7 +21,6 @@ function Index() {
   const [secondShops, setSecShop] = useState([]);
   const [secondContacts, setSecCont] = useState([]);
   const [highLight, setHighLight] = useState({})
-  const [profile, setProfile] = useState({})
   const [input, setInput] = useState({
     name: '0440000000',
     days: 14
@@ -61,13 +53,12 @@ function Index() {
       const y = Math.random() * 65 + 3
       people.push({ x, y, num })
     }
-    axios.get('/api').then(res => {
+    API.init().then(res => {
       const { arr, arr2 } = res.data
       arr.forEach(element => {
         const { num, shopType } = element
         const x = Math.random() * 65 + 2
         const y = Math.random() * 65 + 3
-        console.log(shopType, icons[shopType])
         shopArr.push({ x, y, num, icon: icons[shopType] })
       });
       setShop(shopArr)
@@ -82,7 +73,7 @@ function Index() {
     setSecCont([])
     setShopColor({})
     setColor({});
-    axios.get('/api/reset').then(res => {
+    API.reset().then(res => {
       const arr = res.data.arr
       const shopArr = shops
       arr.forEach((element, index) => {
@@ -92,10 +83,6 @@ function Index() {
       setShop(shopArr)
     });
   }
-  const genRandom = (array) => {
-    const ranNum = Math.floor(Math.random() * array.length);
-    return array[ranNum]
-  }
   const checkNode = (id) => {
     if (document.getElementById(id).classList.length > 1) {
       return true
@@ -104,8 +91,6 @@ function Index() {
   const handleClick = (e) => {
     clearTimeout(timeOut);
     const name = e.target.getAttribute('name');
-    const shop = shops.find(shop => shop.num === name)
-    const shopType = shop ? shop.shopType : ''
     if (checkNode(name)) {
       const lineArr = highLight;
       lineArr[name] = ''
@@ -119,14 +104,14 @@ function Index() {
       phoneNumber: name,
       numdays: 14
     }
-    axios.post('/api', data)
+    API.tag(data)
       .then(res => handleTag(res, name,
         colors, setColor, shopColor, setShopColor,
         zero, setZero, closeContacts, setClose,
         secondShops, setSecShop, secondContacts, setSecCont, people)
       )
       .then(() => {
-        axios.post('/api/info', { name, shopType })
+        API.search({ name })
           .then(result => {
             dispatch({
               type: 'info',
@@ -137,24 +122,12 @@ function Index() {
           })
       })
   }
-  const clickShop = (e) => {
-    const name = e.target.getAttribute('name');
-    axios.post('/api/info', { name })
-      .then(res => {
-        if (res.data.item.type === 'shop') {
-          console.log(res.data)
-        }
-      })
 
-  }
   const handleHover = (e) => {
     const name = e.target.getAttribute('name');
     if (highlightSwitch.status && otherLines.toggle && checkNode(name)) {
-      const shop = shops.find(shop => shop.num === name)
-      const shopType = shop ? shop.shopType : ''
-      console.log(shopType)
       timeOut = setTimeout(() => {
-        axios.post('/api/info', { name, shopType })
+        API.search({ name })
           .then(res => {
             dispatch({
               type: 'info',
@@ -245,7 +218,7 @@ function Index() {
       numdays: days
     }
     console.log(data)
-    axios.post('/api', data)
+    API.tag(data)
       .then(res => handleTag(res, name,
         colors, setColor, shopColor, setShopColor,
         zero, setZero, closeContacts, setClose,
@@ -278,8 +251,7 @@ function Index() {
             style={{ top: `${shop.y}vh`, left: `${shop.x}vw` }}
             name={shop.num}
             onMouseOver={handleHover}
-            onMouseOut={handleLeave}
-            onClick={clickShop}>
+            onMouseOut={handleLeave}>
             <span name={shop.num} className={shop.icon} />
           </div>
         ))}
