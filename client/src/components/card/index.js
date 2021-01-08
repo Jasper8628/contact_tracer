@@ -1,6 +1,7 @@
 import React, { useState, useLayoutEffect } from 'react'
 import { useNewContext } from '../../utils/global';
 import QRcode from 'qrcode.react'
+import API from '../../utils/API'
 import './style.css'
 function Index() {
   const [global, dispatch] = useNewContext();
@@ -24,13 +25,14 @@ function Index() {
   }, []);
   const handleClick = (e) => {
     const name = e.target.getAttribute('name');
-    // const detail=document.getElementById(name).tog
-    // detail.toggle
-    console.log(name)
-    setRotate({
-      ...rotate,
-      [name]: rotate[name] !== '90deg' ? '90deg' : '0deg'
-    })
+    API.search({ name })
+      .then(res => {
+        dispatch({
+          type: 'info',
+          item: res.data.item
+        })
+        console.log(res.data)
+      })
   }
   const handleLeave = (e) => {
     const name = e.target.getAttribute('name');
@@ -67,7 +69,7 @@ function Index() {
         {/* <p>Dates since exposure</p> */}
         {global.item.dates.map((date, index) => (
           <div className='date' key={index}>
-            <h3>{date.date} :</h3>
+            <h3>{date.date.split(' ').join('/')} :</h3>
             {date.log.map((entry, index) => (
               global.item.type === 'shop' ?
                 <div className='content' >
@@ -76,7 +78,7 @@ function Index() {
                     {entry.log.map((customer, index) => (
                       <div className='content' key={index} >
                         <p><span className='far fa-user' /> {customer.name} </p>
-                        <p><span className='fas fa-mobile-alt' /> {customer.phoneNumber}</p>
+                        <p className='searchLink' onClick={handleClick} name={customer.phoneNumber}><span className='fas fa-mobile-alt' /> {customer.phoneNumber}</p>
                       </div>
                     ))}
                   </details>
@@ -86,13 +88,17 @@ function Index() {
                   <details  >
                     <summary  > <span className='fas fa-chevron-circle-right' /> {entry.shopName}: </summary>
                     <div className='content'>
-                      <p><span className='fas fa-phone-alt' />  {entry.phoneNumber}  </p>
+                      <p className='searchLink' onClick={handleClick} name={entry.phoneNumber} ><span className='fas fa-phone-alt' /> {entry.phoneNumber} </p>
                       <p>from: {parseInt(entry.from)} :
                       {parseInt((entry.from - (parseInt(entry.from))) * 60) === 0 ?
-                          ' 00' : parseInt((entry.from - (parseInt(entry.from))) * 60)}</p>
+                          ' 00' : parseInt((entry.from - (parseInt(entry.from))) * 60) < 10 ?
+                            ` 0${parseInt((entry.from - (parseInt(entry.from))) * 60)}` :
+                            parseInt((entry.from - (parseInt(entry.from))) * 60)}</p>
                       <p>to: {parseInt(entry.to)} :
                        {parseInt((entry.to - (parseInt(entry.to))) * 60) === 0 ?
-                          ' 00' : parseInt((entry.to - (parseInt(entry.to))) * 60)}</p>
+                          ' 00' : parseInt((entry.from - (parseInt(entry.from))) * 60) < 10 ?
+                            ` 0${parseInt((entry.from - (parseInt(entry.from))) * 60)}` :
+                            parseInt((entry.to - (parseInt(entry.to))) * 60)}</p>
                     </div>
                   </details>
 

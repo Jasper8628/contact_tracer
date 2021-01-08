@@ -87,6 +87,24 @@ function Index() {
     setSecCont([])
     setShopColor({})
     setColor({});
+    setCheckbox({
+      'line1': 'far fa-dot-circle', 'line2': 'far fa-dot-circle', 'line3': 'far fa-dot-circle', 'line4': 'far fa-dot-circle'
+    })
+    setOtherlins({
+      line1: 'line1', line2: 'line2', line3: 'line3', line4: 'line4', toggle: false, text: 'far fa-circle', veil: 0, currentLines: {}
+    })
+    setLineDisplay({
+      display: 'block',
+      text: 'Clear Lines',
+      fa: 'fas fa-eye-slash'
+    })
+    setSwitch({
+      status: true,
+      text: 'far fa-dot-circle'
+    })
+    dispatch({
+      type: 'reset'
+    })
     API.reset()
     // .then(res => {
     //   const arr = res.data.arr

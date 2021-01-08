@@ -9,31 +9,18 @@ const reducer = (state, action) => {
         ...state,
         item: action.item
       }
-    case 'zero':
-      return {
-        ...state,
-        zero: action.lineZero
-      };
-    case 'lineClose':
-      return {
-        ...state,
-        closeContacts: action.lineClose
-      };
-    case 'secShop':
-      return {
-        ...state,
-        secondShops: action.lineShop
-      };
-    case 'secContact':
-      return {
-        ...state,
-        secondContacts: action.lineSecond
-      };
     case 'set':
       return {
         ...state,
         colors: action.color,
         shopColor: action.shopCol
+      }
+    case 'reset':
+      return {
+        ...state,
+        item: {
+          dates: []
+        }
       }
 
     default:
