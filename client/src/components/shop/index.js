@@ -57,7 +57,7 @@ function Index() {
     for (let i = 0; i < 2001; i++) {
       const num = '0' + (440000000 + i);
       const x = Math.random() * 65 + 2
-      const y = Math.random() * 65 + 3
+      const y = Math.random() * 64 + 2
       dots.push({ x, y, num })
     }
     API.init().then(res => {
@@ -72,7 +72,7 @@ function Index() {
       arr.forEach(element => {
         const { num, shopType } = element
         const x = Math.random() * 65 + 2
-        const y = Math.random() * 65 + 3
+        const y = Math.random() * 64 + 2
         shopArr.push({ x, y, num, icon: icons[shopType] })
       });
       setShop(shopArr)
