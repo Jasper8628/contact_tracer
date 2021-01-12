@@ -185,7 +185,7 @@ const restart = async () => {
       generateVisit(j, customers[numStr], visits, offset)
     }
   }
-  return JSON.stringify(displayShops)
+  return JSON.stringify([displayShops, displayCustomers])
 }
 
 const tag = async (phoneNumber, numdays) => {
@@ -240,7 +240,9 @@ const secTag = async (arr, isSecRound) => {
     tempArr.forEach(customer => {
       const phoneNum = customer.phoneNumber;
       const name = customer.name;
-      if (!customers[phoneNum].numdays) {
+      if (!customers[phoneNum].numdays
+        || customers[phoneNum].numdays < numDays
+      ) {
         customers[phoneNum].numdays = numDays
       }
       if (!isSecRound) {

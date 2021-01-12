@@ -4,6 +4,7 @@ const cors = require('cors')({ origin: true });
 admin.initializeApp()
 const express = require("express");
 const [tag, secTag, reset, restart, search, displayShops, displayCustomers, clearShops] = require('./utils/customer');
+const { json } = require('express');
 
 const app = express();
 app.use(express.urlencoded({ extended: true }));
@@ -61,10 +62,11 @@ app.post('/api', (req, res) => {
     })
 })
 app.get('/api', (req, res) => {
-  // cors(req, res, () => {
-  console.log('init request')
-  res.json({ arr: displayShops, arr2: displayCustomers })
-  // })
+  restart().then((data) => {
+    const result = JSON.parse(data)
+    console.log('init request')
+    res.json({ arr: result[0], arr2: result[1] })
+  })
 })
 exports.server = functions.region('australia-southeast1').https.onRequest(app);
 

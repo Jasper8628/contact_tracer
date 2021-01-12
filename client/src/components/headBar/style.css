@@ -67,7 +67,7 @@
 #search{
   width: 3vw;
   height: 3vh;
-  font-size: 1.5em;
+  font-size: clamp(1em,1vw,1.5em);
   /* border: rgba(17, 186, 238, 0.915) solid 2px; */
   /* border-radius: 50%; */
   border: none;
