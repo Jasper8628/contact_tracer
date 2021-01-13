@@ -17,7 +17,7 @@
 .card h1{
   color: rgba(255, 255, 255, 0.603);
   text-align: start;
-  margin-top: 3vh;
+  margin-top: clamp(10px,5vh,30px);
   font-size: clamp(1em,1.2vw,1.8em);
   font-family: sans-serif;
 }
@@ -156,8 +156,8 @@ details[open] summary span{
   top:30%;
   transform: translate(-50%,-50%); */
   /* margin-left: 5%; */
-  width: 12vw;
-  height: 12vw;
+  /* width: 13vw;
+  height: 13vw; */
   /* background: rgba(255, 255, 255, 0.459); */
-  background: transparent;
+  /* background: yellow; */
 }
